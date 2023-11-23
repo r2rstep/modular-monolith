@@ -15,3 +15,13 @@ a non-modular legacy codebase.
 4. Solving the "cross-cutting concerns" problem (logging in, transaction management, ...)
 5. Assessment of different ways to solve the problem of access rights to entities (different user roles)
 6. Assessing the benefits and drawbacks of mixing domain models with DB mapping and other non-"Clean Architecture" patterns
+
+## Project setup
+
+### Prerequisites
+1. Python 3.9 or higher
+2. pip-tools
+
+### Installation
+1. Clone the repository
+2. Run `pip-sync` to install all dependencies

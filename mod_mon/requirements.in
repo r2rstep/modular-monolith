@@ -1,0 +1,6 @@
+alembic
+alembic-postgresql-enum
+fastapi
+gunicorn
+SQLAlchemy
+uvicorn
