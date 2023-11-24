@@ -11,7 +11,7 @@ ignore = [
     "C90", # mccabe complexity
     "COM", # commas
     "CPY", # copyright
-    "D104", "D203", "D213", # docstring
+    "D", # docstring
     "DTZ", # datetime timezone
     "DJ",  # django
     "EXE", # executable
@@ -19,12 +19,35 @@ ignore = [
     "FBT", # boolean trap
     "G", # logging format
     "INT",  # ?
+    "ISC001",    # advised to ignore by ruff formatter
     "NPY", # numpy
     "PD", # pandas
     "PYI", # pyi files
     "TCH", # type checking import block
     "TRIO", # trio
 ]
+
+[tool.ruff.per-file-ignores]
+"**/tests/**/*.py" = [
+    "ARG", # unused function args -> fixtures nevertheless are functionally relevant...
+    "ANN", # don't care about annotations in tests
+    "PLR2004", # magix values (e.g. assert result == 1)
+    "S101", # asserts allowed in tests...
+]
+
+[tool.ruff.lint.isort]
+case-sensitive = false
+combine-as-imports = true
+force-sort-within-sections = true
+known-first-party = ["mod_mon"]
+section-order = ["future", "standard-library", "third-party", "fastapi", "sqlalchemy", "api", "core", "first-party", "local-folder"]
+
+[tool.ruff.lint.isort.sections]
+"api" = ["mod_mon.api", "mod_mon.*.api"]
+"core" = ["mod_mon.core", "mod_mon.*.core"]
+"fastapi" = ["fastapi", "fastapi.*"]
+"sqlalchemy" = ["sqlalchemy", "sqlalchemy.*"]
+
 
 
 [tool.mypy]

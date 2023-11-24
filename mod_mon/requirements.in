@@ -1,6 +1,8 @@
 alembic
 alembic-postgresql-enum
+email-validator
 fastapi
 gunicorn
+httpx
 SQLAlchemy
 uvicorn
