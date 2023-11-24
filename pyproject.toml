@@ -32,7 +32,7 @@ ignore = [
     "ARG", # unused function args -> fixtures nevertheless are functionally relevant...
     "ANN", # don't care about annotations in tests
     "PLR2004", # magix values (e.g. assert result == 1)
-    "S101", # asserts allowed in tests...
+    "S", # security checks
 ]
 
 [tool.ruff.lint.isort]
@@ -65,3 +65,6 @@ plugins = "pydantic.mypy"
 show_error_codes = true
 check_untyped_defs = true
 disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests", "**/tests"]
