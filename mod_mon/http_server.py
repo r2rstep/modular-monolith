@@ -1,5 +1,5 @@
+# noqa: INP001
 import uvicorn
 
-
 if __name__ == "__main__":
-    uvicorn.run("api.application:app", host="0.0.0.0", port=8100, reload=True)
+    uvicorn.run("api.application:app", host="localhost", port=8100, reload=True)
