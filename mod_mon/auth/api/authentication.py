@@ -10,6 +10,6 @@ class RegistrationReq(BaseModel):
     password: SecretStr
 
 
-@router.post("/register")
+@router.post("/registration")
 async def register(req: RegistrationReq) -> None:
     dict(req)
