@@ -1,0 +1,44 @@
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+select = [
+    "ALL",
+]
+
+ignore = [
+    "AIR", # airflow
+    "C90", # mccabe complexity
+    "COM", # commas
+    "CPY", # copyright
+    "D104", "D203", "D213", # docstring
+    "DTZ", # datetime timezone
+    "DJ",  # django
+    "EXE", # executable
+    "FA", # future annotations
+    "FBT", # boolean trap
+    "G", # logging format
+    "INT",  # ?
+    "NPY", # numpy
+    "PD", # pandas
+    "PYI", # pyi files
+    "TCH", # type checking import block
+    "TRIO", # trio
+]
+
+
+[tool.mypy]
+python_version = "3.10"
+follow_imports = "normal"
+ignore_missing_imports = true
+incremental = true
+warn_redundant_casts = true
+strict_optional = true
+warn_unused_configs = true
+warn_return_any = true
+warn_unused_ignores = true
+disallow_any_generics = true
+plugins = "pydantic.mypy"
+show_error_codes = true
+check_untyped_defs = true
+disallow_untyped_defs = true
