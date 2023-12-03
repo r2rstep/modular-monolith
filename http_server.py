@@ -1,4 +1,3 @@
-# noqa: INP001
 import uvicorn
 
 if __name__ == "__main__":
