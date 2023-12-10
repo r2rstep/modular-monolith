@@ -3,12 +3,11 @@
 ## Levels of testing
 
 1. domain logic
+    - it's the default level of testing as it tests core responsibility of the system and any module
     - should be used when given module contains complex domain logic
 2. adapters
     - should be used when adapters code in given module contains complex logic (e.g. complex database queries)
 3. use cases
-   - it's the default level of testing as it coordinates domain logic and infrastructure and so writing tests on use 
-     cases level should cover most of the code
    - in case of simple domain logic, it can be used instead of domain logic testing
    - in case of complex domain logic, those tests should only cover coordination between domain logic and 
      infrastructure as the execution of use cases tests introduces penalty on performance as those tests require 
