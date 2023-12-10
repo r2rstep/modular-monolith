@@ -11,35 +11,75 @@ Events enable processing commands that span over multiple modules
 
 The table summarizes events and the context under which they should be used.
 
-|     Event type    | Emitter/Handler transaction | Emitter/Handler Bounded Context |                       Comment                      |
-|:-----------------:|:---------------------------:|:-------------------------------:|:--------------------------------------------------:|
-| Domain Event      |             Same            |               Same              |               Can hold Value Objects               |
-| Notification      |           Separate          |               Same              | Serializable; Versioned; Cannot hold Value Objects |
-| Integration Event |           Separate          |             Separate            | Serializable; Versioned; Cannot hold Value Objects |
+|     Event type    |                                                                            Emitter/Handler transaction                                                                           | Emitter/Handler Bounded Context |
+|:-----------------:|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------:|
+| Domain Event      | Private: same transaction<br><br>Public:<br>1. `Command` that derives from `Domain Event` saved in `Outbox` in same transaction<br>2. handler executed in a separate transaction |           <br><br>Same          |
+| Integration Event |                                                                                     Separate                                                                                     |             Separate            |
 
 #### Domain Event
 
-Used mainly to split use case processing that needs to be handled by multiple "DDD modules" which are part of the same
- Bounded Context. Because it's handled within the same transaction, the handler is always able to process the 
-current event's payload (domain events are processed the moment they are published) which means those events do not 
-need to be versioned and can hold `Value Object`
+Used mainly to split use case processing that needs to be handled by multiple "DDD modules" or `Aggregates` which are 
+part of the same Bounded Context.
 
-#### Notification
+##### Controlling module's events API
 
-Enables splitting processing of a use case into multiple transactions which is important when e.g.
-- the 1st handler executes the critical part which should not be rolled-back when other parts fail
-- other parts are time-consuming
+It may be undesirable to expose given event emitted by a module to other modules when e.g. the event holds sensitive 
+data. That's why only `public` events should be exposed to other modules.
 
-As this event is processed in a separate transaction, there needs to be a mechanism that assures a `Notification` is 
-always handled. (Outbox and Inbox patterns)[https://microservices.io/patterns/data/transactional-outbox.html] are used
-for that which guarantee "at leas once delivery". Because of the guarantee it's important for the handlers to 
-process a `Notification` idempotently.
+##### Transactional boundary
 
-Delivery of a `Notification` should be retried on failure (with a limit of retries).
+In this project the transactional boundary is defined by `Command` and each module manages its own transaction. That 
+poses a problem when a `Domain Event` is emitted by a module and handled by another module. In such situation 
+additional mechanism needs to be introduced to assure that the event is handled by the subscriber even when the 
+system crashes during handling the event. This is achieved by using `Inbox` pattern.
 
-Because those events are stored in an `Outbox`, the event's payload might change before it's processed by its 
-handlers. This requires versioning the events and makes incorporating `Value Object` forbidden as it should be 
-freely adjusted to domain needs which poses a risk of introducing breaking changes to `Notification`
+Inbox pattern (very similar to (Outbox)[https://microservices.io/patterns/data/transactional-outbox.html]) 
+guarantees "at leas once delivery". Because of the guarantee it's important for the handlers to process `Domain 
+Event` idempotently.
+
+##### Other considerations
+
+Some projects distinguish more explicitly between private and public `Domain Events` - for example by introducing 
+`Domain Event Notification` (see (blog post by Kamil Grzybek)[https://www.kamilgrzybek.com/blog/posts/handling-domain-event-missing-part]).
+It was decided not to follow such approach because:
+1. As was stated before, the transactional boundary is defined by `Command` and involving `Domain Event Notification` 
+   breaks this rule.
+2. `Domain Event` and `Domain Event Notification` that derives from the `Domain Event` inform about the exactly same 
+   fact that happened in the system and the only reason for introducing `Domain Event Notification` is technical 
+   which should not be the case for domain code. If `Domain Event Notification` is introduced, there can be a 
+   situation when both `Domain Event` and `Domain Event Notification` are subscribed by a module which is 
+   confusing.
+
+##### Implementation of Domain Event handling in a separate transaction
+
+As mentioned before, `Inbox` pattern is used to handle `Domain Event` in a separate transaction. There is a 
+difference in how most other projects use it for events handling which is the result of the above considerations.
+
+In most projects `Inbox` (or `Outbox`) is used to store `Domain Event` while this project uses it to store `Command` 
+that is created with `Domain Event`.
+
+Because `Commands` that are derived from `Domain Event` are stored in an `Inbox` and processed only "eventually" with 
+some undetermined time delay, the event's handler might expect different payload. This requires versioning the 
+commands.
+
+```mermaid
+sequenceDiagram
+    participant A as Aggregate
+    participant DE as Domain Event
+    participant DEH as Domain Event Handler
+    participant I as Inbox
+    participant CB as Command Bus
+    participant CH as Command Handler
+
+    A->>DE: emit
+    DE->>DEH: handle the event
+    DEH->>I: save command
+    I->>CB: dispatch command
+    CB->>CH: handle command
+```
+
+In the future, this may require differentiating between `Internal Command` that is created with `Domain Event` and 
+`Command` that is created by a user or a separate `Bounded Context`.
 
 #### Integration Events
 
