@@ -10,12 +10,12 @@ from modules.rich_domain.module_1.infrastructure.configuration import (
 from modules.rich_domain.module_1.infrastructure.container import container
 
 
-def get_router() -> APIRouter:
+def get_routers() -> list[APIRouter]:
     from modules.rich_domain.module_1.api.rich_domain_endpoints import router as rich_domain_resource_router
 
-    router = APIRouter()
+    router = APIRouter(prefix="/rich_domain_resources", tags=["rich_domain_resources"])
     router.include_router(rich_domain_resource_router)
-    return router
+    return [router]
 
 
 def startup() -> None:

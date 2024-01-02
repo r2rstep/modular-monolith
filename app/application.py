@@ -15,4 +15,5 @@ async def app_lifespan(_: FastAPI) -> AbstractAsyncContextManager[None]:
 
 app = FastAPI(title="mod_mon API", version="0.1.0", lifespan=app_lifespan)
 
-app.include_router(module_1.startup.get_router(), prefix="/rich_domain_resources")
+for router in module_1.startup.get_routers():
+    app.include_router(router)
