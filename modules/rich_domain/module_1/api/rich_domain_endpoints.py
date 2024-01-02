@@ -6,10 +6,9 @@ from fastapi import APIRouter
 
 from modules.rich_domain.module_1.core.commands.rich_domain_model import (
     CreateRichDomainModel,
-    CreateRichDomainModelHandler,
 )
 
-from modules.rich_domain.module_1.infrastructure.container import Container
+from modules.rich_domain.module_1.module import module_1
 
 router = APIRouter()
 
@@ -24,6 +23,5 @@ class CreatedRichDomainResourceResp(BaseModel):
 
 @router.post("/", response_model=CreatedRichDomainResourceResp)
 async def create_rich_domain_resource(req: CreateRichDomainResourceReq):
-    container = Container()
-    result = await CreateRichDomainModelHandler(container.event_bus).handle(CreateRichDomainModel(name=req.name))
+    result = await module_1.command_bus.execute(CreateRichDomainModel(name=req.name))
     return {"pk": result}

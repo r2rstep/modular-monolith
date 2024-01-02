@@ -9,7 +9,7 @@ def event_bus() -> EventBus:
 
 
 @pytest.fixture(autouse=True)
-def _module_startup(event_bus: EventBus) -> None:
+def _module_startup() -> None:
     from modules.rich_domain.module_1.infrastructure.startup import startup
 
-    startup(event_bus)
+    startup()
