@@ -1,8 +1,10 @@
 from abc import ABC, abstractmethod
 
+import injector
 from pydantic import BaseModel, ConfigDict
 
 from building_blocks.types import PK, NoneOr
+from building_blocks.within_bounded_context.infrastructure.event_bus import EventBus
 
 
 class Command(ABC, BaseModel):
@@ -10,6 +12,10 @@ class Command(ABC, BaseModel):
 
 
 class CommandHandler:
+    @injector.inject
+    def __init__(self, event_bus: EventBus):
+        self.event_bus = event_bus
+
     @abstractmethod
-    def handle(self, command: Command) -> NoneOr[PK]:
+    async def handle(self, command: Command) -> NoneOr[PK]:
         ...

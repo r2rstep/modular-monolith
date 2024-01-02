@@ -4,6 +4,7 @@ email-validator
 fastapi
 gunicorn
 httpx
+injector
 pydantic
 SQLAlchemy
 uvicorn
