@@ -1,8 +1,5 @@
 from fastapi import APIRouter
 
-from building_blocks.within_bounded_context.infrastructure.command_bus import CommandToHandlerMapping
-from building_blocks.within_bounded_context.infrastructure.event_bus import EventBus
-from infrastructure.container.global_container import global_container
 from modules.rich_domain.module_1.infrastructure.configuration import (
     command_bus as command_bus_config,
     event_bus as event_bus_config,
@@ -19,5 +16,5 @@ def get_routers() -> list[APIRouter]:
 
 
 def startup() -> None:
-    event_bus_config.configure_subscriptions(global_container.get(EventBus))
-    command_bus_config.configure_commands_mapping(container.get(CommandToHandlerMapping), container)
+    container.call_with_injection(event_bus_config.configure_subscriptions)
+    container.call_with_injection(command_bus_config.configure_commands_mapping)
