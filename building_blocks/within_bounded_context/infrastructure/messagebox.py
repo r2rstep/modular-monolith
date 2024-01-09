@@ -15,7 +15,7 @@ class MessageDTO:
 
 class MessageBox:
     def __init__(self, module_name: str):
-        self._outbox_name = f"{module_name.replace('.', '_')}_outbox"
+        self._messagebox_name = f"{module_name.replace('.', '_')}_messagebox"
         self._message_box = []
 
     async def add(self, name: MessageName, payload: dict[str, object]) -> None:
@@ -41,4 +41,15 @@ class Inbox(MessageBox):
     def __init__(self, module_name: str):
         super().__init__(module_name)
 
-        self._outbox_name = f"{module_name.replace('.', '_')}_inbox"
+        self._messagebox_name = f"{module_name.replace('.', '_')}_inbox"
+
+    async def add_idempotent(self, name: MessageName, payload: dict[str, object], idempotence_id: str) -> None:
+        if not any(message["payload"].get("__idempotent_id") == idempotence_id for message in self._message_box):
+            payload["__idempotent_id"] = idempotence_id
+            await self.add(name, payload)
+
+    async def get_next(self) -> NoneOr[MessageDTO]:
+        if message := await super().get_next():
+            message.payload.pop("__idempotent_id", None)
+            return message
+        return None

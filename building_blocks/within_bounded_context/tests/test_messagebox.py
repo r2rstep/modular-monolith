@@ -1,6 +1,7 @@
 import pytest
 
 from building_blocks.within_bounded_context.infrastructure.messagebox import (
+    Inbox,
     MessageBox,
     MessageDTO,
     MessageName,
@@ -39,3 +40,19 @@ class TestMessageBox:
 
         # then messages are returned in the same order as they were added
         assert [msg.name for msg in messages] == [MessageName(m_name) for m_name in messages_names]
+
+
+@pytest.mark.asyncio()
+async def test_inbox_add_and_get_idempotent():
+    # given inbox with a stored message
+    inbox = Inbox("test")
+    await inbox.add_idempotent(MessageName("test_message_1"), {}, "test_idempotent_id")
+
+    # when adding a message with the same idempotent_id
+    await inbox.add_idempotent(MessageName("test_message_2"), {}, "test_idempotent_id")
+
+    # then message is not added
+    messages = []
+    while message := await inbox.get_next():
+        messages.append(message)
+    assert messages == [MessageDTO(MessageName("test_message_1"), {})]
