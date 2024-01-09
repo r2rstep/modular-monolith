@@ -7,3 +7,4 @@ from building_blocks.within_bounded_context.domain.events import DomainEvent
 class RichDomainModelCreated(DomainEvent):
     pk: PK
     name: RichDomainModelName
+    is_public: bool = True
