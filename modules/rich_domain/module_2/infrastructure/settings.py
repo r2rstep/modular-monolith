@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from building_blocks.within_bounded_context.infrastructure.utils import (
+from building_blocks.utils import (
     get_module_name_from_file_path,
     get_python_module_from_file_path,
 )

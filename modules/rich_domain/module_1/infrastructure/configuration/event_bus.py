@@ -1,9 +1,9 @@
 import injector
 
-from modules.rich_domain.module_1.core.domain.events import RichDomainModelCreated
-from modules.rich_domain.module_1.core.event_handlers.rich_domain_model_created_handler import (
+from modules.rich_domain.module_1.core.application.event_handlers.rich_domain_model_created_handler import (
     RichDomainModelCreatedHandler,
 )
+from modules.rich_domain.module_1.core.domain.events import RichDomainModelCreated
 
 from building_blocks.within_bounded_context.application.event_handlers import DomainEventHandler
 from building_blocks.within_bounded_context.application.generic_event_handlers import GenericStorePublicEventInOutbox
@@ -12,7 +12,7 @@ from building_blocks.within_bounded_context.domain.events import (
     event_originates_from_module,
     is_public_event,
 )
-from building_blocks.within_bounded_context.infrastructure.event_bus import EventBus, EventHandlingMediatorBase
+from infrastructure.event_bus import EventBus, EventHandlingMediatorBase
 from modules.rich_domain.module_1.infrastructure import settings
 
 

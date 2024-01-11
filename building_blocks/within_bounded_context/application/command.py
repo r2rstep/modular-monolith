@@ -4,7 +4,7 @@ import injector
 from pydantic import BaseModel, ConfigDict
 
 from building_blocks.types import PK, NoneOr
-from building_blocks.within_bounded_context.infrastructure.event_bus import EventBus
+from infrastructure.event_bus import EventBus
 
 
 class Command(ABC, BaseModel):

@@ -1,11 +1,11 @@
 import injector
 
-from modules.rich_domain.module_1.core.commands.rich_domain_model import (
+from modules.rich_domain.module_1.core.application.commands.rich_domain_model import (
     CreateRichDomainModel,
     CreateRichDomainModelHandler,
 )
 
-from building_blocks.within_bounded_context.infrastructure.command_bus import CommandToHandlerMapping
+from building_blocks.within_bounded_context.application.command_bus import CommandToHandlerMapping
 
 
 @injector.inject

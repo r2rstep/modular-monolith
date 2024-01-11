@@ -1,4 +1,4 @@
-from building_blocks.within_bounded_context.infrastructure.messagebox import Outbox
+from infrastructure.messagebox import Outbox
 from modules.rich_domain.module_1.infrastructure import settings
 
 
