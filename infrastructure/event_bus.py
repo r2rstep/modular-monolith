@@ -39,3 +39,9 @@ class EventHandlingMediatorBase(ABC):
     @abstractmethod
     async def handle(self, event: DomainEvent, handler_cls: type[DomainEventHandler]) -> None:
         ...
+
+
+class EventsSubscriptionsConfiguratorBase(ABC):
+    @abstractmethod
+    def configure_subscriptions(self, event_bus: EventBus, mediator: EventHandlingMediatorBase) -> None:
+        ...

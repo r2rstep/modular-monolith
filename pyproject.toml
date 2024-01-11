@@ -75,3 +75,50 @@ disallow_untyped_defs = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests", "modules/**/tests"]
+
+
+
+[tool.importlinter]
+root_packages = ["app", "building_blocks", "infrastructure", "modules"]
+
+[[tool.importlinter.contracts]]
+name = "Layers with building blocks"
+type = "layers"
+layers = [
+    "app",
+    "modules",
+    "building_blocks",
+]
+
+[[tool.importlinter.contracts]]
+name = "Layers with infrastructure"
+type = "layers"
+layers = [
+    "app",
+    "modules",
+    "infrastructure",
+]
+
+[[tool.importlinter.contracts]]
+name = "Modules layers"
+type = "layers"
+layers = [
+    "api",
+    "core.application",
+    "(core.domain)",
+]
+containers = [
+    "modules.rich_domain.module_1",
+    "modules.rich_domain.module_2",
+]
+
+[[tool.importlinter.contracts]]
+name = "Modules interfaces"
+type = "independence"
+modules = [
+    "modules.rich_domain.module_1",
+    "modules.rich_domain.module_2",
+]
+ignore_imports = [
+    "modules.** -> modules.**.interface",
+]
