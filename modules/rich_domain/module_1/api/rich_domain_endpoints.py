@@ -4,11 +4,9 @@ from pydantic import BaseModel
 
 from fastapi import APIRouter
 
-from modules.rich_domain.module_1.core.application.commands.rich_domain_model import (
-    CreateRichDomainModel,
-)
+from modules.rich_domain.module_1.core.application.commands.rich_domain_model import CreateRichDomainModel
 
-from modules.rich_domain.module_1.module import module_1
+from modules.rich_domain.module_1.interface import module_1
 
 router = APIRouter()
 

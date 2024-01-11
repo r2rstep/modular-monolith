@@ -16,5 +16,5 @@ def get_routers() -> list[APIRouter]:
 
 
 def startup() -> None:
-    container.call_with_injection(event_bus_config.configure_subscriptions)
+    container.call_with_injection(event_bus_config.EventsSubscriptionsConfigurator().configure_subscriptions)
     container.call_with_injection(command_bus_config.configure_commands_mapping)
