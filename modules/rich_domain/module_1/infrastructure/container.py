@@ -1,8 +1,8 @@
 import injector
 
-from building_blocks.within_bounded_context.infrastructure.command_bus import CommandBus, CommandToHandlerMapping
-from building_blocks.within_bounded_context.infrastructure.messagebox import Inbox, Outbox
+from building_blocks.within_bounded_context.application.command_bus import CommandBus, CommandToHandlerMapping
 from infrastructure.container.global_container import GlobalContainer
+from infrastructure.messagebox import Inbox, Outbox
 from modules.rich_domain.module_2.infrastructure.configuration.inbox import init_inbox
 from modules.rich_domain.module_2.infrastructure.configuration.outbox import init_outbox
 

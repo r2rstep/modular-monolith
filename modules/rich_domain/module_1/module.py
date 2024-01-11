@@ -1,6 +1,6 @@
 import injector
 
-from building_blocks.within_bounded_context.infrastructure.command_bus import CommandBus
+from building_blocks.within_bounded_context.application.command_bus import CommandBus
 from building_blocks.within_bounded_context.module.module import ModuleInterface
 from modules.rich_domain.module_1.infrastructure.container import container
 

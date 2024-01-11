@@ -2,7 +2,7 @@ import pytest
 
 from building_blocks.within_bounded_context.application.event_handlers import DomainEventHandler
 from building_blocks.within_bounded_context.domain.events import DomainEvent
-from building_blocks.within_bounded_context.infrastructure.event_bus import EventBus, EventHandlingMediatorBase
+from infrastructure.event_bus import EventBus, EventHandlingMediatorBase
 
 
 class SomethingHappened(DomainEvent):

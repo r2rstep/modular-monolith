@@ -1,11 +1,6 @@
 import pytest
 
-from building_blocks.within_bounded_context.infrastructure.messagebox import (
-    Inbox,
-    MessageBox,
-    MessageDTO,
-    MessageName,
-)
+from infrastructure.messagebox import Inbox, MessageBox, MessageDTO, MessageName
 
 
 @pytest.mark.asyncio()

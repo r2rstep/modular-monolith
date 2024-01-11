@@ -1,6 +1,7 @@
 import injector
 
 from modules.rich_domain.module_1.core.domain.events import RichDomainModelCreated
+from modules.rich_domain.module_2.core.application.module_1_events_handlers import DoSomething
 
 from building_blocks.within_bounded_context.application.event_handlers import DomainEventHandler
 from building_blocks.within_bounded_context.application.generic_event_handlers import (
@@ -12,8 +13,7 @@ from building_blocks.within_bounded_context.domain.events import (
     event_originates_from_module,
     is_public_event,
 )
-from building_blocks.within_bounded_context.infrastructure.event_bus import EventBus, EventHandlingMediatorBase
-from modules.rich_domain.module_2.application.module_1_events_handlers import DoSomething
+from infrastructure.event_bus import EventBus, EventHandlingMediatorBase
 from modules.rich_domain.module_2.infrastructure import settings
 
 

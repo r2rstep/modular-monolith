@@ -5,7 +5,7 @@ from building_blocks.within_bounded_context.application.generic_event_handlers i
     build_store_command_in_inbox_handler,
 )
 from building_blocks.within_bounded_context.domain.events import DomainEvent
-from building_blocks.within_bounded_context.infrastructure.messagebox import Inbox, MessageDTO, MessageName
+from infrastructure.messagebox import Inbox, MessageDTO, MessageName
 
 
 class SomeEvent(DomainEvent):
