@@ -3,7 +3,7 @@ import contextvars
 import injector
 import pytest
 
-from infrastructure.container import scopes
+from commons.container.infrastructure import scopes
 
 
 @pytest.mark.asyncio()

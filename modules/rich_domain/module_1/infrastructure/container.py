@@ -1,9 +1,9 @@
 import injector
 
 from building_blocks.within_bounded_context.application.command_bus import CommandBus, CommandToHandlerMapping
-from infrastructure.container.global_container import GlobalContainer
-from infrastructure.event_bus import EventHandlingMediatorBase
-from infrastructure.messagebox import Inbox, Outbox
+from commons.container.infrastructure.global_container import GlobalContainer
+from commons.event_bus.application.event_bus import EventHandlingMediatorBase
+from commons.messagebox.infrastructure.messagebox import Inbox, Outbox
 from modules.rich_domain.module_1.infrastructure.configuration.event_bus import EventHandlingMediator
 from modules.rich_domain.module_1.infrastructure.configuration.inbox import init_inbox
 from modules.rich_domain.module_1.infrastructure.configuration.outbox import init_outbox

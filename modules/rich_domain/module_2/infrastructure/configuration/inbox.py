@@ -1,4 +1,4 @@
-from infrastructure.messagebox import Inbox
+from commons.messagebox.infrastructure.messagebox import Inbox
 from modules.rich_domain.module_2.infrastructure import settings
 
 

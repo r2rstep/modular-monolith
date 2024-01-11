@@ -2,7 +2,11 @@ import injector
 
 from building_blocks.within_bounded_context.application.event_handlers import DomainEventHandler
 from building_blocks.within_bounded_context.domain.events import DomainEvent, is_public_event
-from infrastructure.event_bus import EventBus, EventHandlingMediatorBase, EventsSubscriptionsConfiguratorBase
+from commons.event_bus.application.event_bus import (
+    EventBus,
+    EventHandlingMediatorBase,
+    EventsSubscriptionsConfiguratorBase,
+)
 
 
 def get_all_subclasses(cls: type) -> list[type]:

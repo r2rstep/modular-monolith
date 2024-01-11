@@ -4,8 +4,8 @@ from typing import Generic, TypeVar
 import injector
 from pydantic import BaseModel, ConfigDict
 
-from building_blocks.types import PK, NoneOr
-from infrastructure.event_bus import EventBus
+from commons.event_bus.application.event_bus import EventBus
+from commons.types import PK, NoneOr
 
 
 class Command(ABC, BaseModel):

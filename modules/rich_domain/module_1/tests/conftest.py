@@ -1,6 +1,6 @@
 import pytest
 
-from infrastructure.event_bus import EventBus
+from commons.event_bus.application.event_bus import EventBus
 
 
 @pytest.fixture()

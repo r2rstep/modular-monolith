@@ -1,7 +1,7 @@
 import injector
 
-from building_blocks.types import PK, NoneOr
 from building_blocks.within_bounded_context.application.command import Command, CommandHandler
+from commons.types import PK, NoneOr
 
 CommandToHandlerMapping = dict[type[Command], type[CommandHandler[Command]]]
 

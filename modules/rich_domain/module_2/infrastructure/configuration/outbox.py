@@ -1,4 +1,4 @@
-from infrastructure.messagebox import Outbox
+from commons.messagebox.infrastructure.messagebox import Outbox
 from modules.rich_domain.module_2.infrastructure import settings
 
 

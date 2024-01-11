@@ -1,11 +1,11 @@
 import pytest
 
 from building_blocks.within_bounded_context.application.command import Command
-from building_blocks.within_bounded_context.application.generic_event_handlers import (
+from building_blocks.within_bounded_context.domain.events import DomainEvent
+from commons.messagebox.application.generic_event_handlers import (
     build_store_command_in_inbox_handler,
 )
-from building_blocks.within_bounded_context.domain.events import DomainEvent
-from infrastructure.messagebox import Inbox, MessageDTO, MessageName
+from commons.messagebox.infrastructure.messagebox import Inbox, MessageDTO, MessageName
 
 
 class SomeEvent(DomainEvent):
