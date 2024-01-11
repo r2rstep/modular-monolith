@@ -1,6 +1,6 @@
 import pytest
 
-from infrastructure.messagebox import Inbox, MessageBox, MessageDTO, MessageName
+from commons.messagebox.infrastructure.messagebox import Inbox, MessageBox, MessageDTO, MessageName
 
 
 @pytest.mark.asyncio()

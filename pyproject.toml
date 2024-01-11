@@ -83,24 +83,18 @@ testpaths = ["tests", "modules/**/tests"]
 
 
 [tool.importlinter]
-root_packages = ["app", "building_blocks", "infrastructure", "modules"]
+root_packages = ["app", "building_blocks", "commons", "modules"]
 
 [[tool.importlinter.contracts]]
-name = "Layers with building blocks"
+name = "Application layers"
 type = "layers"
 layers = [
     "app",
     "modules",
-    "building_blocks",
+    "building_blocks | commons.container.infrastructure | commons.messagebox.infrastructure",
 ]
-
-[[tool.importlinter.contracts]]
-name = "Layers with infrastructure"
-type = "layers"
-layers = [
-    "app",
-    "modules",
-    "infrastructure",
+ignore_imports = [
+    "commons.container.infrastructure.global_container -> commons.**",
 ]
 
 [[tool.importlinter.contracts]]

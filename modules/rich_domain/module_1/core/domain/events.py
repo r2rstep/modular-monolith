@@ -1,5 +1,5 @@
-from building_blocks.types import PK
 from building_blocks.within_bounded_context.domain.events import DomainEvent
+from commons.types import PK
 from modules.rich_domain.language import RichDomainModelName
 
 

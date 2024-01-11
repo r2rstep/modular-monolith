@@ -1,7 +1,7 @@
 import injector
 
-from infrastructure.container import scopes
-from infrastructure.event_bus import EventBus
+from commons.container.infrastructure import scopes
+from commons.event_bus.application.event_bus import EventBus
 
 
 class GlobalContainer(injector.Module):

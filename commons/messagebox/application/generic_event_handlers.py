@@ -5,8 +5,8 @@ import injector
 from building_blocks.within_bounded_context.application.command import Command
 from building_blocks.within_bounded_context.application.event_handlers import DomainEventHandler
 from building_blocks.within_bounded_context.domain.events import DomainEvent
-from infrastructure.messagebox import Inbox, MessageName, Outbox
-from infrastructure.utils import get_annotations
+from commons.messagebox.infrastructure.messagebox import Inbox, MessageName, Outbox
+from commons.utils import get_annotations
 
 
 class GenericStorePublicEventInOutbox(DomainEventHandler[DomainEvent]):

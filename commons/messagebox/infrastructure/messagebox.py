@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import NewType, TypedDict
 
-from building_blocks.types import NoneOr
+from commons.types import NoneOr
 
 MessageName = NewType("MessageName", str)
 

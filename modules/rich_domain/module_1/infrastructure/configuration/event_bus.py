@@ -8,14 +8,18 @@ from modules.rich_domain.module_1.core.application.event_handlers.rich_domain_mo
 from modules.rich_domain.module_1.core.domain.events import RichDomainModelCreated
 
 from building_blocks.within_bounded_context.application.event_handlers import DomainEventHandler
-from building_blocks.within_bounded_context.application.generic_event_handlers import GenericStorePublicEventInOutbox
 from building_blocks.within_bounded_context.domain.events import (
     DomainEvent,
     DomainEventType,
     event_originates_from_module,
     is_public_event,
 )
-from infrastructure.event_bus import EventBus, EventHandlingMediatorBase, EventsSubscriptionsConfiguratorBase
+from commons.event_bus.application.event_bus import (
+    EventBus,
+    EventHandlingMediatorBase,
+    EventsSubscriptionsConfiguratorBase,
+)
+from commons.messagebox.application.generic_event_handlers import GenericStorePublicEventInOutbox
 from modules.rich_domain.module_1.infrastructure import settings
 
 
