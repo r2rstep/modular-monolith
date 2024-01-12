@@ -1,51 +1,71 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict
-from typing import NewType
+from typing import Union, overload
 
 import injector
 
-from building_blocks.within_bounded_context.application.event_handlers import DomainEventHandler
-from building_blocks.within_bounded_context.domain.events import (
-    DomainEvent,
+from building_blocks.within_bounded_context.application.event_handlers import (
+    DomainEventHandler,
+    EventHandlerType,
+    EventType,
+    NotificationEventHandler,
 )
+from building_blocks.within_bounded_context.application.notification_event import NotificationEvent
+from building_blocks.within_bounded_context.domain.events import DomainEvent, DomainEventType
+from commons.messagebox.types import PublicDomainEventsClsList
 
-Subscriptions = NewType(
-    "Subscriptions",
-    dict[type[DomainEvent], list[tuple[type[DomainEventHandler[DomainEvent]], "EventHandlingMediatorBase"]]],
-)
+
+class Subscriptions(dict[type[EventType], list[EventHandlerType]]):
+    ...
 
 
 class EventBus:
     @injector.inject
     def __init__(self) -> None:
-        self._subscriptions: Subscriptions = defaultdict(list)  # type: ignore[assignment]
+        self._subscriptions: Union[
+            Subscriptions[DomainEvent, DomainEventHandler[DomainEvent]],
+            Subscriptions[NotificationEvent[DomainEvent], NotificationEventHandler[DomainEvent]],
+        ] = defaultdict(list)  # type: ignore[assignment]
 
+    @overload
     def subscribe(
         self,
-        event_cls: type[DomainEvent],
-        handler_cls: type[DomainEventHandler[DomainEvent]],
-        mediator: "EventHandlingMediatorBase",
+        event_cls: type[DomainEventType],
+        handler: DomainEventHandler[DomainEventType],
     ) -> None:
-        self._subscriptions[event_cls].append((handler_cls, mediator))
+        ...
 
+    @overload
+    def subscribe(
+        self,
+        event_cls: type[NotificationEvent[DomainEventType]],
+        handler: NotificationEventHandler[DomainEventType],
+    ) -> None:
+        ...
+
+    def subscribe(self, event_cls, handler):  # type: ignore[no-untyped-def]
+        self._subscriptions[event_cls].append(handler)
+
+    @overload
     async def publish(self, event: DomainEvent) -> None:
+        ...
+
+    @overload
+    async def publish(self, event: NotificationEvent[DomainEvent]) -> None:
+        ...
+
+    async def publish(self, event):  # type: ignore[no-untyped-def]
         handlers = self._subscriptions.get(type(event))
         if handlers:
-            for handler_cls, mediator in handlers:
-                await mediator.handle(event, handler_cls)
-
-
-class EventHandlingMediatorBase(ABC):
-    """
-    Enables injecting module specific dependencies into event handlers.
-    """
-
-    @abstractmethod
-    async def handle(self, event: DomainEvent, handler_cls: type[DomainEventHandler[DomainEvent]]) -> None:
-        ...
+            for handler in handlers:
+                await handler.handle(event)
 
 
 class EventsSubscriptionsConfiguratorBase(ABC):
     @abstractmethod
-    def configure_subscriptions(self, event_bus: EventBus, mediator: EventHandlingMediatorBase) -> None:
+    def configure_subscriptions(
+        self,
+        event_bus: EventBus,
+        public_domain_events_cls_list: PublicDomainEventsClsList,
+    ) -> None:
         ...

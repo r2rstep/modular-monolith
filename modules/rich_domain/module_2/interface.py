@@ -1,10 +1,8 @@
 import injector
 
-from modules.rich_domain.module_1.core.domain.events import RichDomainModelCreated
-
 from building_blocks.within_bounded_context.application.command_bus import CommandBus
 from building_blocks.within_bounded_context.module.module import ModuleInterface
-from modules.rich_domain.module_1.infrastructure.container import container
+from modules.rich_domain.module_2.infrastructure.container import container
 
 
 class Module(ModuleInterface):
@@ -17,4 +15,4 @@ def get_module() -> Module:
     return container.get(Module)
 
 
-__all__ = ["get_module", "RichDomainModelCreated"]
+__all__ = ["get_module"]
