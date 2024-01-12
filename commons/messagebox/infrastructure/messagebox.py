@@ -20,38 +20,38 @@ class MessageDict(TypedDict):
     created_at: datetime
 
 
-class MessageBox:
+class Messagebox:
     def __init__(self, module_name: str):
         self._messagebox_name = f"{module_name.replace('.', '_')}_messagebox"
-        self._message_box: list[MessageDict] = []
+        self._messagebox: list[MessageDict] = []
 
     async def add(self, name: MessageName, payload: dict[str, object]) -> None:
-        self._message_box.append(
+        self._messagebox.append(
             {"name": name, "payload": payload, "status": "pending", "created_at": datetime.utcnow()}
         )
 
     async def get_next(self) -> NoneOr[MessageDTO]:
-        if self._message_box:
-            entry = self._message_box.pop(0)
+        if self._messagebox:
+            entry = self._messagebox.pop(0)
             return MessageDTO(entry["name"], entry["payload"])
         return None
 
 
-class Outbox(MessageBox):
+class Outbox(Messagebox):
     def __init__(self, module_name: str):
         super().__init__(module_name)
 
         self._outbox_name = f"{module_name.replace('.', '_')}_outbox"
 
 
-class Inbox(MessageBox):
+class Inbox(Messagebox):
     def __init__(self, module_name: str):
         super().__init__(module_name)
 
         self._messagebox_name = f"{module_name.replace('.', '_')}_inbox"
 
     async def add_idempotent(self, name: MessageName, payload: dict[str, object], idempotence_id: str) -> None:
-        if not any(message["payload"].get("__idempotent_id") == idempotence_id for message in self._message_box):
+        if not any(message["payload"].get("__idempotent_id") == idempotence_id for message in self._messagebox):
             payload["__idempotent_id"] = idempotence_id
             await self.add(name, payload)
 
