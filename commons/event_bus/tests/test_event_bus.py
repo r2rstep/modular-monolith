@@ -2,7 +2,7 @@ import pytest
 
 from building_blocks.within_bounded_context.application.event_handlers import DomainEventHandler
 from building_blocks.within_bounded_context.domain.events import DomainEvent
-from commons.event_bus.application.event_bus import EventBus, EventHandlingMediatorBase
+from commons.event_bus.application.event_bus import EventBus
 
 
 class SomethingHappened(DomainEvent):
@@ -31,11 +31,6 @@ class SomethingElseHappenedHandler(DomainEventHandler):
         something_else_happened_handled = True
 
 
-class DummyMediator(EventHandlingMediatorBase):
-    async def handle(self, event: DomainEvent, handler_cls: type[DomainEventHandler]) -> None:
-        await handler_cls().handle(event)
-
-
 @pytest.mark.asyncio()
 class TestEventBus:
     @pytest.fixture(autouse=True)
@@ -44,7 +39,7 @@ class TestEventBus:
 
     async def test_publish_with_no_subscriptions_to_event(self) -> None:
         # given event bus with subscriptions
-        self.event_bus.subscribe(SomethingHappened, SomethingHappenedHandler, DummyMediator())
+        self.event_bus.subscribe(SomethingHappened, SomethingHappenedHandler())
 
         # when publishing an event with no subscriptions
         await self.event_bus.publish(SomethingElseHappened())
@@ -54,7 +49,7 @@ class TestEventBus:
 
     async def test_publish_with_subscriptions_to_event(self) -> None:
         # given event bus with subscriptions
-        self.event_bus.subscribe(SomethingHappened, SomethingHappenedHandler, DummyMediator())
+        self.event_bus.subscribe(SomethingHappened, SomethingHappenedHandler())
 
         # when publishing an event with subscriptions
         await self.event_bus.publish(SomethingHappened())
@@ -64,8 +59,8 @@ class TestEventBus:
 
     async def test_publish_with_multiple_subscriptions_to_event(self) -> None:
         # given event bus with subscriptions
-        self.event_bus.subscribe(SomethingHappened, SomethingHappenedHandler, DummyMediator())
-        self.event_bus.subscribe(SomethingHappened, SomethingElseHappenedHandler, DummyMediator())
+        self.event_bus.subscribe(SomethingHappened, SomethingHappenedHandler())
+        self.event_bus.subscribe(SomethingHappened, SomethingElseHappenedHandler())
 
         # when publishing an event with subscriptions
         await self.event_bus.publish(SomethingHappened())

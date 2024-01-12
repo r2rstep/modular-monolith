@@ -1,9 +1,14 @@
 import pytest
 from starlette.testclient import TestClient
 
-from app.application import app
+from app.application import app as fastapi_app
 
 
 @pytest.fixture()
-def api_client():
+def app():
+    return fastapi_app
+
+
+@pytest.fixture()
+def api_client(app):
     return TestClient(app)

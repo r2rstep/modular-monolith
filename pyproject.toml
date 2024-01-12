@@ -17,9 +17,11 @@ ignore = [
     "D", # docstring
     "DTZ", # datetime timezone
     "DJ",  # django
+    "EM101", # string literals in exceptions
     "EXE", # executable
     "FA", # future annotations
     "FBT", # boolean trap
+    "FIX002", # line contains TODO (covered by linter forcing issue link for TODO)
     "G", # logging format
     "INT",  # ?
     "ISC001",    # advised to ignore by ruff formatter
@@ -28,6 +30,7 @@ ignore = [
     "PYI", # pyi files
     "TCH", # type checking import block
     "TRIO", # trio
+    "TRY003", # long messages in exceptions
 ]
 
 ignore-init-module-imports = true
@@ -36,6 +39,7 @@ ignore-init-module-imports = true
 "**/tests/**/test*.py" = [
     "ARG", # unused function args -> fixtures nevertheless are functionally relevant...
     "ANN", # don't care about annotations in tests
+    "PLR0913", # too many function arguments
     "PLR2004", # magix values (e.g. assert result == 1)
     "S", # security checks
 ]
@@ -95,6 +99,7 @@ layers = [
 ]
 ignore_imports = [
     "commons.container.infrastructure.global_container -> commons.**",
+    "modules.**.tests.** -> app.**",
 ]
 
 [[tool.importlinter.contracts]]
@@ -119,4 +124,5 @@ modules = [
 ]
 ignore_imports = [
     "modules.** -> modules.**.interface",
+    "modules.**.tests.** -> app.**",
 ]

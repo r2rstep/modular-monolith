@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import NewType, TypedDict
+from typing import Any, NewType, TypedDict
 
 from commons.types import NoneOr
 
@@ -10,7 +10,7 @@ MessageName = NewType("MessageName", str)
 @dataclass
 class MessageDTO:
     name: MessageName
-    payload: dict[str, object]
+    payload: dict[str, Any]
 
 
 class MessageDict(TypedDict):
