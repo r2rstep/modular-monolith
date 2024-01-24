@@ -29,7 +29,7 @@ DomainEventType = TypeVar("DomainEventType", bound=DomainEvent)
 
 
 def is_public_event(event_cls: type[DomainEvent]) -> bool:
-    return event_cls.model_fields.get("is_public", FieldInfo(default=True)).default
+    return bool(event_cls.model_fields.get("is_public", FieldInfo(default=True)).default)
 
 
 def event_originates_from_module(event_cls: type[DomainEvent], module_path: str) -> bool:

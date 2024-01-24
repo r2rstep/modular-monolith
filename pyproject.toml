@@ -72,6 +72,10 @@ plugins = "pydantic.mypy"
 show_error_codes = true
 check_untyped_defs = true
 disallow_untyped_defs = true
+exclude = [
+    "tests",
+    ".*test.*",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests", "modules/**/tests"]

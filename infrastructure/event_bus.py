@@ -10,17 +10,21 @@ from building_blocks.within_bounded_context.domain.events import (
 )
 
 Subscriptions = NewType(
-    "Subscriptions", dict[type[DomainEvent], list[tuple[type[DomainEventHandler], "EventHandlingMediatorBase"]]]
+    "Subscriptions",
+    dict[type[DomainEvent], list[tuple[type[DomainEventHandler[DomainEvent]], "EventHandlingMediatorBase"]]],
 )
 
 
 class EventBus:
     @injector.inject
     def __init__(self) -> None:
-        self._subscriptions: Subscriptions = defaultdict(list)
+        self._subscriptions: Subscriptions = defaultdict(list)  # type: ignore[assignment]
 
     def subscribe(
-        self, event_cls: type[DomainEvent], handler_cls: type[DomainEventHandler], mediator: "EventHandlingMediatorBase"
+        self,
+        event_cls: type[DomainEvent],
+        handler_cls: type[DomainEventHandler[DomainEvent]],
+        mediator: "EventHandlingMediatorBase",
     ) -> None:
         self._subscriptions[event_cls].append((handler_cls, mediator))
 
@@ -37,7 +41,7 @@ class EventHandlingMediatorBase(ABC):
     """
 
     @abstractmethod
-    async def handle(self, event: DomainEvent, handler_cls: type[DomainEventHandler]) -> None:
+    async def handle(self, event: DomainEvent, handler_cls: type[DomainEventHandler[DomainEvent]]) -> None:
         ...
 
 

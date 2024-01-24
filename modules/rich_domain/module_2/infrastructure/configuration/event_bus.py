@@ -8,7 +8,7 @@ from building_blocks.within_bounded_context.application.generic_event_handlers i
     build_store_command_in_inbox_handler,
 )
 from building_blocks.within_bounded_context.domain.events import (
-    DomainEvent,
+    DomainEventType,
     event_originates_from_module,
     is_public_event,
 )
@@ -22,13 +22,13 @@ class EventHandlingMediator(EventHandlingMediatorBase):
     def __init__(self, container: injector.Injector) -> None:
         self._container = container
 
-    async def handle(self, event: DomainEvent, event_handler: type[DomainEventHandler]) -> None:
+    async def handle(self, event: DomainEventType, event_handler: type[DomainEventHandler[DomainEventType]]) -> None:
         await self._container.get(event_handler).handle(event)
 
 
 class EventsSubscriptionsConfigurator(EventsSubscriptionsConfiguratorBase):
     @injector.inject
-    def configure_subscriptions(self, event_bus: EventBus, mediator: EventHandlingMediator) -> None:
+    def configure_subscriptions(self, event_bus: EventBus, mediator: EventHandlingMediatorBase) -> None:
         for event_cls, handler_cls in [
             (RichDomainModelCreated, build_store_command_in_inbox_handler(DoSomething)),
         ]:
