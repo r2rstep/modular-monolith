@@ -13,9 +13,9 @@ def test_ruff():
     # below print ensures PyCharm is able to link to the failing files
     print("\n")  # noqa: T201
     stdout, stderr, exit_code = _run([ruff, "check", "."])
-    assert exit_code == 0, f"ruff check failed: {stdout}"
+    assert exit_code == 0, f"ruff check failed:\n{stdout}"
     stdout, stderr, exit_code = _run([ruff, "format", "--check", "."])
-    assert exit_code == 0, f"ruff format check failed: {stdout}"
+    assert exit_code == 0, f"ruff format check failed:\n{stdout}"
 
 
 def _run(cmd: list[str]) -> tuple[str, str, int]:

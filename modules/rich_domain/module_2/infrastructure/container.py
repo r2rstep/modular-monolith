@@ -2,24 +2,18 @@ import injector
 
 from building_blocks.within_bounded_context.application.command_bus import CommandBus, CommandToHandlerMapping
 from infrastructure.container.global_container import GlobalContainer
+from infrastructure.event_bus import EventHandlingMediatorBase
 from infrastructure.messagebox import Inbox, Outbox
+from modules.rich_domain.module_2.infrastructure.configuration.event_bus import EventHandlingMediator
 from modules.rich_domain.module_2.infrastructure.configuration.inbox import init_inbox
 from modules.rich_domain.module_2.infrastructure.configuration.outbox import init_outbox
 
 
 class Container(injector.Module):
     def configure(self, binder: injector.Binder) -> None:
-        commands_mapping = {}
-        binder.multibind(
-            CommandToHandlerMapping,
-            to=commands_mapping,
-            scope=injector.singleton,
-        )
-        binder.bind(
-            CommandBus,
-            to=CommandBus,
-            scope=injector.singleton,
-        )
+        binder.multibind(CommandToHandlerMapping, to={}, scope=injector.singleton)
+        binder.bind(CommandBus, to=CommandBus, scope=injector.singleton)
+        binder.bind(EventHandlingMediatorBase, to=EventHandlingMediator)  # type: ignore[type-abstract]
 
     @injector.singleton
     @injector.provider

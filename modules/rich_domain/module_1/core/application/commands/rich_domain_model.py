@@ -11,7 +11,7 @@ class CreateRichDomainModel(Command):
     name: str
 
 
-class CreateRichDomainModelHandler(CommandHandler):
+class CreateRichDomainModelHandler(CommandHandler[CreateRichDomainModel]):
     async def handle(self, command: CreateRichDomainModel) -> PK:
         pk = PK(uuid4())
 

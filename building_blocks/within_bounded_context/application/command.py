@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Generic, TypeVar
 
 import injector
 from pydantic import BaseModel, ConfigDict
@@ -11,11 +12,14 @@ class Command(ABC, BaseModel):
     model_config = ConfigDict(frozen=True)
 
 
-class CommandHandler:
+CommandType = TypeVar("CommandType", bound=Command)
+
+
+class CommandHandler(ABC, Generic[CommandType]):
     @injector.inject
     def __init__(self, event_bus: EventBus):
         self.event_bus = event_bus
 
     @abstractmethod
-    async def handle(self, command: Command) -> NoneOr[PK]:
+    async def handle(self, command: CommandType) -> NoneOr[PK]:
         ...

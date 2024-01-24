@@ -20,6 +20,6 @@ class CreatedRichDomainResourceResp(BaseModel):
 
 
 @router.post("/", response_model=CreatedRichDomainResourceResp)
-async def create_rich_domain_resource(req: CreateRichDomainResourceReq):
+async def create_rich_domain_resource(req: CreateRichDomainResourceReq):  # type: ignore[no-untyped-def]
     result = await module_1.command_bus.execute(CreateRichDomainModel(name=req.name))
     return {"pk": result}

@@ -1,4 +1,5 @@
-from contextlib import AbstractAsyncContextManager, asynccontextmanager
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
@@ -7,7 +8,7 @@ from modules.rich_domain import module_1
 
 
 @asynccontextmanager
-async def app_lifespan(_: FastAPI) -> AbstractAsyncContextManager[None]:
+async def app_lifespan(_: FastAPI) -> AsyncIterator[None]:
     start_modules()
 
     yield

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import NewType
+from typing import NewType, TypedDict
 
 from building_blocks.types import NoneOr
 
@@ -13,10 +13,17 @@ class MessageDTO:
     payload: dict[str, object]
 
 
+class MessageDict(TypedDict):
+    name: MessageName
+    payload: dict[str, object]
+    status: str
+    created_at: datetime
+
+
 class MessageBox:
     def __init__(self, module_name: str):
         self._messagebox_name = f"{module_name.replace('.', '_')}_messagebox"
-        self._message_box = []
+        self._message_box: list[MessageDict] = []
 
     async def add(self, name: MessageName, payload: dict[str, object]) -> None:
         self._message_box.append(

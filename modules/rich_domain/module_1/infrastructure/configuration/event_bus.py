@@ -1,3 +1,5 @@
+from typing import cast
+
 import injector
 
 from modules.rich_domain.module_1.core.application.event_handlers.rich_domain_model_created_handler import (
@@ -9,6 +11,7 @@ from building_blocks.within_bounded_context.application.event_handlers import Do
 from building_blocks.within_bounded_context.application.generic_event_handlers import GenericStorePublicEventInOutbox
 from building_blocks.within_bounded_context.domain.events import (
     DomainEvent,
+    DomainEventType,
     event_originates_from_module,
     is_public_event,
 )
@@ -21,16 +24,16 @@ class EventHandlingMediator(EventHandlingMediatorBase):
     def __init__(self, container: injector.Injector) -> None:
         self._container = container
 
-    async def handle(self, event: DomainEvent, event_handler: type[DomainEventHandler]) -> None:
+    async def handle(self, event: DomainEventType, event_handler: type[DomainEventHandler[DomainEventType]]) -> None:
         await self._container.get(event_handler).handle(event)
 
 
 class EventsSubscriptionsConfigurator(EventsSubscriptionsConfiguratorBase):
     @injector.inject
-    def configure_subscriptions(self, event_bus: EventBus, mediator: EventHandlingMediator) -> None:
+    def configure_subscriptions(self, event_bus: EventBus, mediator: EventHandlingMediatorBase) -> None:
         for event_cls, handler_cls in [
             (RichDomainModelCreated, RichDomainModelCreatedHandler),
         ]:
-            event_bus.subscribe(event_cls, handler_cls, mediator)
+            event_bus.subscribe(event_cls, cast(type[DomainEventHandler[DomainEvent]], handler_cls), mediator)
             if is_public_event(event_cls) and event_originates_from_module(event_cls, settings.MODULE):
                 event_bus.subscribe(event_cls, GenericStorePublicEventInOutbox, mediator)

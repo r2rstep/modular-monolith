@@ -9,7 +9,7 @@ from infrastructure.messagebox import Inbox, MessageName, Outbox
 from infrastructure.utils import get_annotations
 
 
-class GenericStorePublicEventInOutbox(DomainEventHandler):
+class GenericStorePublicEventInOutbox(DomainEventHandler[DomainEvent]):
     @injector.inject
     def __init__(self, outbox: Outbox) -> None:
         self._outbox = outbox
@@ -19,7 +19,7 @@ class GenericStorePublicEventInOutbox(DomainEventHandler):
             await self._outbox.add(MessageName(event.name), dict(event))
 
 
-class GenericStoreCommandBasedOnEventInInbox(DomainEventHandler):
+class GenericStoreCommandBasedOnEventInInbox(DomainEventHandler[DomainEvent]):
     _command_cls: type[Command]
 
     def __init__(self, inbox: injector.Inject[Inbox]) -> None:
