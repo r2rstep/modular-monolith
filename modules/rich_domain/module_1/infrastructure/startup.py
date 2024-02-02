@@ -20,3 +20,4 @@ def startup() -> None:
         container.get(event_bus_config.EventsSubscriptionsConfigurator).configure_subscriptions
     )
     container.call_with_injection(command_bus_config.configure_commands_mapping)
+    container.call_with_injection(command_bus_config.configure_queries_mapping)

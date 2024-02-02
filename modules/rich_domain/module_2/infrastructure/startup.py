@@ -8,7 +8,9 @@ from modules.rich_domain.module_2.infrastructure.container import container
 
 
 def get_routers() -> list[APIRouter]:
-    return []
+    from modules.rich_domain.module_2.api.some_endpoints import router
+
+    return [router]
 
 
 def startup() -> None:
@@ -16,3 +18,4 @@ def startup() -> None:
         container.get(event_bus_config.EventsSubscriptionsConfigurator).configure_subscriptions
     )
     container.call_with_injection(command_bus_config.configure_commands_mapping)
+    container.call_with_injection(command_bus_config.configure_queries_mapping)
