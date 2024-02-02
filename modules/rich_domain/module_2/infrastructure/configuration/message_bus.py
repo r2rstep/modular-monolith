@@ -6,7 +6,7 @@ from modules.rich_domain.module_2.core.application.module_1_events_handlers impo
 from modules.rich_domain.module_2.core.application.query import GetSomething, GetSomethingHandler
 
 from building_blocks.within_bounded_context.application.command import Command, CommandHandler
-from building_blocks.within_bounded_context.application.command_bus import (
+from building_blocks.within_bounded_context.application.message_bus import (
     CommandToHandlerMapping,
     QueryToHandlerMapping,
 )

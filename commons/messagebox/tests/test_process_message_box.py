@@ -4,7 +4,7 @@ from pydantic import BaseModel
 import pytest
 
 from building_blocks.within_bounded_context.application.command import Command
-from building_blocks.within_bounded_context.application.command_bus import CommandBus
+from building_blocks.within_bounded_context.application.message_bus import MessageBus
 from building_blocks.within_bounded_context.application.notification_event import NotificationEvent
 from building_blocks.within_bounded_context.domain.events import DomainEvent
 from commons.event_bus.application.event_bus import EventBus
@@ -24,7 +24,7 @@ class DummyEventOrCommand(DomainEvent, Command):
     is_public: bool = True
 
 
-class FakeBus(EventBus, CommandBus):
+class FakeBus(EventBus, MessageBus):
     def __init__(self) -> None:
         self.processed = []
         super().__init__()

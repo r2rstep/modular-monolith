@@ -9,7 +9,7 @@ from modules.rich_domain.module_1.core.application.commands.rich_domain_model im
 from modules.rich_domain.module_1.core.application.queries.get_a import GetA, GetAHandler
 
 from building_blocks.within_bounded_context.application.command import Command, CommandHandler
-from building_blocks.within_bounded_context.application.command_bus import (
+from building_blocks.within_bounded_context.application.message_bus import (
     CommandToHandlerMapping,
     QueryToHandlerMapping,
 )

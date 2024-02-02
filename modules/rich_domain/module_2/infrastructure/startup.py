@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
 from modules.rich_domain.module_2.infrastructure.configuration import (
-    command_bus as command_bus_config,
     event_bus as event_bus_config,
+    message_bus as command_bus_config,
 )
 from modules.rich_domain.module_2.infrastructure.container import container
 

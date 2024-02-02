@@ -18,8 +18,8 @@ async def app_lifespan(_: FastAPI) -> AsyncIterator[None]:
 # TODO @R2RStep: implement proper inbox processing
 # https://github.com/r2rstep/modular-monolith/issues/20
 async def process_inboxes() -> None:
-    await module_1.interface.get_module().command_bus.execute(ProcessInbox())
-    await module_2.interface.get_module().command_bus.execute(ProcessInbox())
+    await module_1.interface.get_module().message_bus.execute(ProcessInbox())
+    await module_2.interface.get_module().message_bus.execute(ProcessInbox())
 
 
 app = FastAPI(title="mod_mon API", version="0.1.0", lifespan=app_lifespan, dependencies=[Depends(process_inboxes)])

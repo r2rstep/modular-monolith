@@ -8,7 +8,7 @@ CommandToHandlerMapping = dict[type[Command], type[CommandHandler[Command]]]
 QueryToHandlerMapping = dict[type[Query], type[QueryHandler[Query]]]
 
 
-class CommandBus:
+class MessageBus:
     @injector.inject
     def __init__(
         self,

@@ -1,8 +1,8 @@
 from fastapi import APIRouter
 
 from modules.rich_domain.module_1.infrastructure.configuration import (
-    command_bus as command_bus_config,
     event_bus as event_bus_config,
+    message_bus as message_bus_config,
 )
 from modules.rich_domain.module_1.infrastructure.container import container
 
@@ -19,5 +19,5 @@ def startup() -> None:
     container.call_with_injection(
         container.get(event_bus_config.EventsSubscriptionsConfigurator).configure_subscriptions
     )
-    container.call_with_injection(command_bus_config.configure_commands_mapping)
-    container.call_with_injection(command_bus_config.configure_queries_mapping)
+    container.call_with_injection(message_bus_config.configure_commands_mapping)
+    container.call_with_injection(message_bus_config.configure_queries_mapping)

@@ -4,7 +4,7 @@ from typing import Generic, TypeVar
 import injector
 
 from building_blocks.within_bounded_context.application.command import Command, CommandHandler
-from building_blocks.within_bounded_context.application.command_bus import CommandBus
+from building_blocks.within_bounded_context.application.message_bus import MessageBus
 from building_blocks.within_bounded_context.application.notification_event import NotificationEvent
 from building_blocks.within_bounded_context.domain.events import DomainEvent
 from commons.event_bus.application.event_bus import EventBus
@@ -70,8 +70,8 @@ class ProcessInbox(Command):
 
 class ProcessInboxCommandsHandler(ProcessMessageboxHandler[Command]):
     @injector.inject
-    def __init__(self, inbox: Inbox, command_bus: CommandBus, commands_cls_list: CommandsList) -> None:
-        self._command_bus = command_bus
+    def __init__(self, inbox: Inbox, message_bus: MessageBus, commands_cls_list: CommandsList) -> None:
+        self._command_bus = message_bus
         super().__init__(inbox, commands_cls_list)
 
     async def _process_message(self, command_cls: type[Command], message: MessageDTO) -> None:

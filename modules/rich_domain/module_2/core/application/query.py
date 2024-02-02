@@ -16,5 +16,5 @@ class GetSomething(Query):
 
 class GetSomethingHandler(QueryHandler[GetSomething]):
     async def handle(self, query: GetSomething) -> GetSomething.Result:
-        a: module_1.GetA.Result = await module_1.get_module().command_bus.query(module_1.GetA())
+        a: module_1.GetA.Result = await module_1.get_module().message_bus.query(module_1.GetA())
         return GetSomething.Result(a.a, query.param)
