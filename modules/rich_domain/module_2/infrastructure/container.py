@@ -1,8 +1,8 @@
 import injector
 
 from building_blocks.within_bounded_context.application.command_bus import (
-    CommandBus,
     CommandToHandlerMapping,
+    MessageBus,
     QueryToHandlerMapping,
 )
 from commons.container.infrastructure.global_container import GlobalContainer
@@ -16,7 +16,7 @@ class Container(injector.Module):
     def configure(self, binder: injector.Binder) -> None:
         binder.multibind(CommandToHandlerMapping, to={}, scope=injector.singleton)
         binder.multibind(QueryToHandlerMapping, to={}, scope=injector.singleton)
-        binder.bind(CommandBus, to=CommandBus, scope=injector.singleton)
+        binder.bind(MessageBus, to=MessageBus, scope=injector.singleton)
         binder.multibind(PublicDomainEventsClsList, to=[], scope=injector.singleton)
         binder.multibind(CommandsList, to=[], scope=injector.singleton)
 
