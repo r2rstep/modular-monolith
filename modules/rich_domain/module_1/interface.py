@@ -1,5 +1,6 @@
 import injector
 
+from modules.rich_domain.module_1.core.application.queries.get_a import GetA
 from modules.rich_domain.module_1.core.domain.events import RichDomainModelCreated
 
 from building_blocks.within_bounded_context.application.command_bus import CommandBus
@@ -17,4 +18,4 @@ def get_module() -> Module:
     return container.get(Module)
 
 
-__all__ = ["get_module", "RichDomainModelCreated"]
+__all__ = ["get_module", "RichDomainModelCreated", "GetA"]

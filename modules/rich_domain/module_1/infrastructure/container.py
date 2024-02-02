@@ -1,6 +1,10 @@
 import injector
 
-from building_blocks.within_bounded_context.application.command_bus import CommandBus, CommandToHandlerMapping
+from building_blocks.within_bounded_context.application.command_bus import (
+    CommandBus,
+    CommandToHandlerMapping,
+    QueryToHandlerMapping,
+)
 from commons.container.infrastructure.global_container import GlobalContainer
 from commons.messagebox.infrastructure.messagebox import Inbox, Outbox
 from commons.messagebox.types import CommandsList, PublicDomainEventsClsList
@@ -11,6 +15,7 @@ from modules.rich_domain.module_1.infrastructure.configuration.outbox import ini
 class Container(injector.Module):
     def configure(self, binder: injector.Binder) -> None:
         binder.multibind(CommandToHandlerMapping, to={}, scope=injector.singleton)
+        binder.multibind(QueryToHandlerMapping, to={}, scope=injector.singleton)
         binder.bind(CommandBus, to=CommandBus, scope=injector.singleton)
         binder.multibind(PublicDomainEventsClsList, to=[], scope=injector.singleton)
         binder.multibind(CommandsList, to=[], scope=injector.singleton)
