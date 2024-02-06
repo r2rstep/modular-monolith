@@ -15,5 +15,5 @@ class SomeResp(BaseModel):
 
 
 @router.get("/some-endpoint")
-async def some_endpoint(param: Annotated[str, Query(...)], module: Module = Depends(get_module)):  # type: ignore[no-untyped-def] # noqa: B008
+async def some_endpoint(param: Annotated[str, Query(...)], module: Module = Depends(get_module)):  # type: ignore[no-untyped-def]
     return await module.message_bus.query(module.GetSomething(param=param))
