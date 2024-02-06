@@ -4,10 +4,10 @@ from typing import Generic, TypeVar
 import injector
 
 from building_blocks.within_bounded_context.application.command import Command, CommandHandler
-from building_blocks.within_bounded_context.application.message_bus import MessageBus
 from building_blocks.within_bounded_context.application.notification_event import NotificationEvent
 from building_blocks.within_bounded_context.domain.events import DomainEvent
 from commons.event_bus.application.event_bus import EventBus
+from commons.message_bus.message_bus import MessageBus
 from commons.messagebox.infrastructure.messagebox import Inbox, Messagebox, MessageDTO, Outbox
 from commons.messagebox.types import CommandsList, PublicDomainEventsClsList
 
@@ -45,10 +45,6 @@ class ProcessMessageboxHandler(CommandHandler[Command], Generic[PayloadType]):
         ...
 
 
-class ProcessOutbox(Command):
-    pass
-
-
 class ProcessOutboxDomainEventsHandler(ProcessMessageboxHandler[DomainEvent]):
     @injector.inject
     def __init__(self, outbox: Outbox, event_bus: EventBus, domain_events_cls_list: PublicDomainEventsClsList) -> None:
@@ -62,10 +58,6 @@ class ProcessOutboxDomainEventsHandler(ProcessMessageboxHandler[DomainEvent]):
             idempotency_id=notification_serialized["idempotency_id"],
         )
         await self._event_bus.publish(notification)
-
-
-class ProcessInbox(Command):
-    pass
 
 
 class ProcessInboxCommandsHandler(ProcessMessageboxHandler[Command]):

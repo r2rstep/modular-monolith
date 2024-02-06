@@ -1,7 +1,7 @@
 import pytest
 
 from app.application import process_inboxes
-from commons.messagebox.application.process_messagebox import ProcessInbox
+from commons.messagebox.application.process_messagebox_commands import ProcessInbox
 from modules.rich_domain import module_1
 from tests.test_app.conftest import api_client, app  # noqa: F401
 

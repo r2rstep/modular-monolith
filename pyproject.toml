@@ -40,11 +40,12 @@ ignore-init-module-imports = true
     "ARG", # unused function args -> fixtures nevertheless are functionally relevant...
     "ANN", # don't care about annotations in tests
     "PLR0913", # too many function arguments
-    "PLR2004", # magix values (e.g. assert result == 1)
+    "PLR2004", # magic values (e.g. assert result == 1)
     "S", # security checks
 ]
 "**/api/**/*endpoints*.py" = [
-    "ANN201", # ignore missing return type annotations in enpoints
+    "ANN201",   # ignore missing return type annotations in enpoints
+    "B008",     # function call in default argument (... = Depends(...))
 ]
 
 [tool.ruff.lint.isort]
@@ -113,6 +114,7 @@ layers = [
 containers = [
     "modules.rich_domain.module_1",
     "modules.rich_domain.module_2",
+    "modules.crud",
 ]
 
 [[tool.importlinter.contracts]]
@@ -121,6 +123,7 @@ type = "independence"
 modules = [
     "modules.rich_domain.module_1",
     "modules.rich_domain.module_2",
+    "modules.crud",
 ]
 ignore_imports = [
     "modules.** -> modules.**.interface",

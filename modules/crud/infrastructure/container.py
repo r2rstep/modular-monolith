@@ -2,7 +2,7 @@ import functools
 
 import injector
 
-from modules.rich_domain.module_1.core.application.commands.messagebox import ProcessInbox, ProcessOutbox
+from modules.crud.core.application.commands.messagebox import ProcessInbox
 
 from commons.container.infrastructure.global_container import get_global_container
 from commons.message_bus.message_bus import MessageBus
@@ -10,27 +10,15 @@ from commons.messagebox.application.process_messagebox_commands import (
     ProcessInbox as ProcessInboxBase,
     ProcessOutbox as ProcessOutboxBase,
 )
-from commons.messagebox.infrastructure.messagebox import Inbox, Outbox
-from commons.messagebox.types import CommandsList, PublicDomainEventsClsList
-from modules.rich_domain.module_1.infrastructure.configuration.inbox import init_inbox
-from modules.rich_domain.module_1.infrastructure.configuration.outbox import init_outbox
+from commons.messagebox.infrastructure.messagebox import Inbox
+from commons.messagebox.types import CommandsList
+from modules.crud.infrastructure.configuration.inbox import init_inbox
 
 
 class Container(injector.Module):
     def configure(self, binder: injector.Binder) -> None:
         binder.bind(MessageBus, to=MessageBus, scope=injector.singleton)
-        binder.multibind(PublicDomainEventsClsList, to=[], scope=injector.singleton)
         binder.multibind(CommandsList, to=[], scope=injector.singleton)
-
-    @injector.singleton
-    @injector.provider
-    def outbox_provider(self) -> Outbox:
-        return init_outbox()
-
-    @injector.singleton
-    @injector.provider
-    def process_outbox_command_provider(self) -> type[ProcessOutboxBase]:
-        return ProcessOutbox
 
     @injector.singleton
     @injector.provider
@@ -39,8 +27,13 @@ class Container(injector.Module):
 
     @injector.singleton
     @injector.provider
-    def process_inbox_command_provider(self) -> type[ProcessInboxBase]:
+    def process_inbox_command(self) -> type[ProcessInboxBase]:
         return ProcessInbox
+
+    @injector.singleton
+    @injector.provider
+    def process_outbox_command(self) -> type[ProcessOutboxBase]:
+        return None  # type: ignore[return-value]
 
 
 @functools.lru_cache

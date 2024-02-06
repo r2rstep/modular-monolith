@@ -4,15 +4,14 @@ from pydantic import BaseModel
 import pytest
 
 from building_blocks.within_bounded_context.application.command import Command
-from building_blocks.within_bounded_context.application.message_bus import MessageBus
 from building_blocks.within_bounded_context.application.notification_event import NotificationEvent
 from building_blocks.within_bounded_context.domain.events import DomainEvent
 from commons.event_bus.application.event_bus import EventBus
-from commons.messagebox.application.process_messagebox import (
-    ProcessInbox,
+from commons.message_bus.message_bus import MessageBus
+from commons.messagebox.application.process_messagebox_commands import ProcessInbox, ProcessOutbox
+from commons.messagebox.application.process_messagebox_handlers import (
     ProcessInboxCommandsHandler,
     ProcessMessageboxHandler,
-    ProcessOutbox,
     ProcessOutboxDomainEventsHandler,
 )
 from commons.messagebox.infrastructure.messagebox import Inbox, Messagebox, MessageDTO, MessageName, Outbox

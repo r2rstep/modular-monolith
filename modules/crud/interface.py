@@ -1,18 +1,17 @@
 from dataclasses import dataclass, field
 
-from modules.rich_domain.module_2.core.application.messagebox import ProcessInbox, ProcessOutbox
-from modules.rich_domain.module_2.core.application.query import GetSomething
+from modules.crud.core.application.commands.messagebox import ProcessInbox
+from modules.crud.core.application.queries.get import GetCrudData
 
 from commons.message_bus.message_bus import MessageBus
-from modules.rich_domain.module_2.infrastructure.container import get_container
+from modules.crud.infrastructure.container import get_container
 
 
 @dataclass
 class Module:
     message_bus: MessageBus = field(default_factory=lambda: get_container().get(MessageBus), init=False)
-    GetSomething = GetSomething
+    GetCrudData = GetCrudData
     ProcessInbox = ProcessInbox
-    ProcessOutbox = ProcessOutbox
 
 
 def get_module() -> Module:
