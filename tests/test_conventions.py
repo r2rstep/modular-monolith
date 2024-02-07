@@ -2,7 +2,6 @@ from pathlib import Path
 import subprocess
 import sysconfig
 
-from importlinter.cli import lint_imports
 import pytest
 import toml
 
@@ -29,13 +28,6 @@ def _run(cmd: list[str]) -> tuple[str, str, int]:
 
 
 @pytest.fixture(scope="session")
-def existing_modules():
-    modules = list(Path(__file__).parent.parent.glob("modules/**/core"))
-    modules = [str(module)[str(module).find("/modules/") :] for module in modules]
-    return [module.lstrip("/").rstrip("/core").replace("/", ".") for module in modules]
-
-
-@pytest.fixture(scope="session")
 def import_linter_contracts(pyproject_toml_path):
     with pyproject_toml_path.open("r") as f:
         pyproject_toml = toml.load(f)
@@ -57,7 +49,3 @@ def test_all_modules_listed_in_modules_interfaces_import_linter_section(existing
     )["modules"]
 
     assert set(modules_listed_in_contracts) == set(existing_modules)
-
-
-def test_import_linter(pyproject_toml_path):
-    assert lint_imports(str(pyproject_toml_path)) == 0

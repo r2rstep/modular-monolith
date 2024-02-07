@@ -1,5 +1,3 @@
-from dataclasses import dataclass, field
-
 from modules.rich_domain.module_1.core.application.commands.messagebox import ProcessInbox, ProcessOutbox
 from modules.rich_domain.module_1.core.application.commands.rich_domain_model import CreateRichDomainModel
 from modules.rich_domain.module_1.core.application.queries.get_a import GetA
@@ -9,9 +7,8 @@ from commons.message_bus.message_bus import MessageBus
 from modules.rich_domain.module_1.infrastructure.container import get_container
 
 
-@dataclass
 class Module:
-    message_bus: MessageBus = field(default_factory=lambda: get_container().get(MessageBus), init=False)
+    message_bus = get_container().get(MessageBus)
     CreateRichDomainModel = CreateRichDomainModel
     RichDomainModelCreated = RichDomainModelCreated
     GetA = GetA
