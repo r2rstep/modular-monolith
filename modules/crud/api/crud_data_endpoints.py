@@ -13,4 +13,4 @@ class CrudDataResp(BaseModel):
 
 @router.get("/crud", response_model=CrudDataResp)
 async def get_crud_data(module: crud_interface.Module = Depends(crud_interface.get_module)):  # type: ignore[no-untyped-def]
-    return await module.message_bus.query(module.GetCrudData())
+    return await module.GetCrudData().handle()

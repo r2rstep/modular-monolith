@@ -2,9 +2,10 @@ from uuid import uuid4
 
 import injector
 
+from modules.rich_domain.module_1.core.application.bases import Command
 from modules.rich_domain.module_1.core.domain.events import RichDomainModelCreated
 
-from building_blocks.within_bounded_context.application.command import Command, CommandHandler
+from building_blocks.within_bounded_context.application.command import CommandHandler
 from commons.event_bus.application.event_bus import EventBus
 from commons.types import PK
 from modules.rich_domain.language import RichDomainModelName
@@ -22,11 +23,6 @@ class CreateRichDomainModelHandler(CommandHandler[CreateRichDomainModel]):
     async def handle(self, command: CreateRichDomainModel) -> PK:
         pk = PK(uuid4())
 
-        await self.event_bus.publish(
-            RichDomainModelCreated(
-                pk=pk,
-                name=RichDomainModelName(command.name),
-            )
-        )
+        await self.event_bus.publish(RichDomainModelCreated(pk=pk, name=RichDomainModelName(command.name)))
 
         return pk

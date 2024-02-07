@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 
+from modules.crud.core.application.bases import Query
+
 from building_blocks.dto import DTO
-from building_blocks.within_bounded_context.application.query import Query, QueryHandler
+from building_blocks.within_bounded_context.application.query import QueryHandler
 
 
-class GetCrudData(Query):
+class GetCrudData(Query["GetCrudData.Result"]):
     @dataclass(frozen=True)
     class Result(DTO):
         a: int
