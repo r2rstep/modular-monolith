@@ -10,7 +10,7 @@ class Command(ABC, BaseModel):
     model_config = ConfigDict(frozen=True)
 
     @property
-    def name(self) -> str:
+    def command_name(self) -> str:
         return self.__class__.__name__
 
 

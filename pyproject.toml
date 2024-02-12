@@ -18,6 +18,7 @@ ignore = [
     "DTZ", # datetime timezone
     "DJ",  # django
     "EM101", # string literals in exceptions
+    "EM102", # Exception must not use an f-string literal
     "EXE", # executable
     "FA", # future annotations
     "FBT", # boolean trap
@@ -112,6 +113,7 @@ layers = [
     "(core.domain)",
 ]
 containers = [
+    "modules.another_rich_domain",
     "modules.rich_domain.module_1",
     "modules.rich_domain.module_2",
     "modules.crud",
@@ -121,6 +123,7 @@ containers = [
 name = "Modules interfaces"
 type = "independence"
 modules = [
+    "modules.another_rich_domain",
     "modules.rich_domain.module_1",
     "modules.rich_domain.module_2",
     "modules.crud",

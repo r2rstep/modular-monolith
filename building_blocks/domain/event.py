@@ -2,21 +2,23 @@ from abc import ABC
 from datetime import datetime
 from typing import TypeVar
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import ConfigDict, Field
 from pydantic.fields import FieldInfo
+
+from building_blocks.event import Event
 
 
 # pydantic features are not really needed but for sake of better DevEx it's better to have all the events technicalities
 # handled the same way
-class DomainEvent(ABC, BaseModel):
+class DomainEvent(ABC, Event):
     is_public: bool = False
     occurred_at: datetime = Field(default_factory=datetime.utcnow)
 
     model_config = ConfigDict(frozen=True)
 
-    @property
-    def name(self) -> str:
-        return self.__class__.__name__
+    @classmethod
+    def event_name(cls) -> str:
+        return f"{DomainEvent.__name__}__{cls.__name__}"
 
 
 DomainEventType = TypeVar("DomainEventType", bound=DomainEvent)

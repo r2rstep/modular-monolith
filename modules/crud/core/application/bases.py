@@ -2,9 +2,9 @@ from typing import Generic, TypeVar
 
 from pydantic import PrivateAttr
 
+from building_blocks.application.command import Command as CommandBase
+from building_blocks.application.query import Query as QueryBase
 from building_blocks.dto import DTO
-from building_blocks.within_bounded_context.application.command import Command as CommandBase
-from building_blocks.within_bounded_context.application.query import Query as QueryBase
 from commons.message_bus.message_bus import MessageBus
 from commons.types import PK, NoneOr
 from modules.crud.infrastructure.container import get_container

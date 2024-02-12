@@ -1,6 +1,6 @@
 from typing import cast
 
-from building_blocks.within_bounded_context.domain.events import DomainEvent, is_public_event
+from building_blocks.domain.event import DomainEvent, is_public_event
 from commons.utils import ClassProtocol, get_all_subclasses
 
 

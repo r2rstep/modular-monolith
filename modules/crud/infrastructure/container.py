@@ -11,14 +11,12 @@ from commons.messagebox.application.process_messagebox_commands import (
     ProcessOutbox as ProcessOutboxBase,
 )
 from commons.messagebox.infrastructure.messagebox import Inbox
-from commons.messagebox.types import CommandsList
 from modules.crud.infrastructure.configuration.inbox import init_inbox
 
 
 class Container(injector.Module):
     def configure(self, binder: injector.Binder) -> None:
         binder.bind(MessageBus, to=MessageBus, scope=injector.singleton)
-        binder.multibind(CommandsList, to=[], scope=injector.singleton)
 
     @injector.singleton
     @injector.provider

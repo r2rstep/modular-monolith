@@ -5,8 +5,8 @@ import injector
 from modules.rich_domain.module_2.core.application.bases import Query
 from modules.rich_domain.module_2.core.types import Module1
 
+from building_blocks.application.query import QueryHandler
 from building_blocks.dto import DTO
-from building_blocks.within_bounded_context.application.query import QueryHandler
 import modules.rich_domain.module_1.interface as module_1
 from modules.rich_domain.ports.api_clients import CrudApiClient
 

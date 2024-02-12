@@ -2,8 +2,8 @@ from dataclasses import dataclass
 
 from modules.crud.core.application.bases import Query
 
+from building_blocks.application.query import QueryHandler
 from building_blocks.dto import DTO
-from building_blocks.within_bounded_context.application.query import QueryHandler
 
 
 class GetCrudData(Query["GetCrudData.Result"]):

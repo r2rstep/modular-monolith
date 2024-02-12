@@ -2,8 +2,8 @@ from typing import Optional
 
 import injector
 
-from building_blocks.within_bounded_context.application.command import Command, CommandHandler
-from building_blocks.within_bounded_context.application.query import Query, QueryHandler
+from building_blocks.application.command import Command, CommandHandler
+from building_blocks.application.query import Query, QueryHandler
 from commons.messagebox.application.process_messagebox_commands import ProcessOutbox
 from commons.types import PK, NoneOr
 
