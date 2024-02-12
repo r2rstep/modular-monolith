@@ -2,14 +2,16 @@ from typing import cast
 
 import injector
 
-from building_blocks.within_bounded_context.application.command import Command
-from building_blocks.within_bounded_context.application.event_handlers import (
+from building_blocks.application.command import Command
+from building_blocks.application.event_handlers import (
     DomainEventHandler,
+    IntegrationEventHandler,
     NotificationEventHandler,
 )
-from building_blocks.within_bounded_context.application.notification_event import NotificationEvent
-from building_blocks.within_bounded_context.domain.events import DomainEventType
-from commons.messagebox.infrastructure.messagebox import Inbox, MessageName, Outbox
+from building_blocks.application.integration_event import IntegrationEventType
+from building_blocks.application.notification_event import NotificationEvent
+from building_blocks.domain.event import DomainEventType
+from commons.messagebox.infrastructure.messagebox import Inbox, MessageTopic, Outbox
 from commons.utils import get_annotations
 
 
@@ -19,7 +21,16 @@ class GenericStoreNotificationEventInOutbox(DomainEventHandler[DomainEventType])
         self._outbox = outbox
 
     async def handle(self, event: DomainEventType) -> None:
-        await self._outbox.add(MessageName(event.name), dict(NotificationEvent(domain_event=event)))
+        await self._outbox.add(MessageTopic(event.event_name()), dict(NotificationEvent(domain_event=event)))
+
+
+class GenericStoreIntegrationEventInInbox(IntegrationEventHandler[IntegrationEventType]):
+    @injector.inject
+    def __init__(self, inbox: Inbox) -> None:
+        self._inbox = inbox
+
+    async def handle(self, event: IntegrationEventType) -> None:
+        await self._inbox.add(MessageTopic(event.event_name()), dict(event))
 
 
 class GenericStoreCommandBasedOnNotificationEventInInbox(NotificationEventHandler[DomainEventType]):
@@ -52,7 +63,7 @@ class GenericStoreCommandBasedOnNotificationEventInInbox(NotificationEventHandle
 
         command_payload = {key: getattr(domain_event, key) for key in command_annotations}
         await self._inbox.add_idempotent(
-            MessageName(self._command_cls.__name__), command_payload, notification.idempotency_id
+            MessageTopic(self._command_cls.__name__), command_payload, notification.idempotency_id
         )
 
 

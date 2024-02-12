@@ -1,4 +1,4 @@
-from building_blocks.within_bounded_context.application.command import Command
+from building_blocks.application.command import Command
 
 
 class ProcessOutbox(Command):

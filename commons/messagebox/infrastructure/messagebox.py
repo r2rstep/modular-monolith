@@ -4,18 +4,21 @@ from typing import Any, NewType, TypedDict
 
 from commons.types import NoneOr
 
-MessageName = NewType("MessageName", str)
+MessageTopic = NewType("MessageTopic", str)
+
+
+MessagePayload = dict[str, Any]
 
 
 @dataclass
 class MessageDTO:
-    name: MessageName
-    payload: dict[str, Any]
+    topic: MessageTopic
+    payload: MessagePayload
 
 
 class MessageDict(TypedDict):
-    name: MessageName
-    payload: dict[str, object]
+    topic: MessageTopic
+    payload: MessagePayload
     status: str
     created_at: datetime
 
@@ -25,15 +28,15 @@ class Messagebox:
         self._messagebox_name = f"{module_name.replace('.', '_')}_messagebox"
         self._messagebox: list[MessageDict] = []
 
-    async def add(self, name: MessageName, payload: dict[str, object]) -> None:
+    async def add(self, topic: MessageTopic, payload: MessagePayload) -> None:
         self._messagebox.append(
-            {"name": name, "payload": payload, "status": "pending", "created_at": datetime.utcnow()}
+            {"topic": topic, "payload": payload, "status": "pending", "created_at": datetime.utcnow()}
         )
 
     async def get_next(self) -> NoneOr[MessageDTO]:
         if self._messagebox:
             entry = self._messagebox.pop(0)
-            return MessageDTO(entry["name"], entry["payload"])
+            return MessageDTO(entry["topic"], entry["payload"])
         return None
 
 
@@ -50,10 +53,10 @@ class Inbox(Messagebox):
 
         self._messagebox_name = f"{module_name.replace('.', '_')}_inbox"
 
-    async def add_idempotent(self, name: MessageName, payload: dict[str, object], idempotence_id: str) -> None:
+    async def add_idempotent(self, topic: MessageTopic, payload: MessagePayload, idempotence_id: str) -> None:
         if not any(message["payload"].get("__idempotent_id") == idempotence_id for message in self._messagebox):
             payload["__idempotent_id"] = idempotence_id
-            await self.add(name, payload)
+            await self.add(topic, payload)
 
     async def get_next(self) -> NoneOr[MessageDTO]:
         if message := await super().get_next():

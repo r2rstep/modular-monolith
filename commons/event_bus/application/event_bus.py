@@ -4,15 +4,16 @@ from typing import Union, overload
 
 import injector
 
-from building_blocks.within_bounded_context.application.event_handlers import (
+from building_blocks.application.event_handlers import (
     DomainEventHandler,
     EventHandlerType,
     EventType,
+    IntegrationEventHandler,
     NotificationEventHandler,
 )
-from building_blocks.within_bounded_context.application.notification_event import NotificationEvent
-from building_blocks.within_bounded_context.domain.events import DomainEvent, DomainEventType
-from commons.messagebox.types import PublicDomainEventsClsList
+from building_blocks.application.integration_event import IntegrationEvent
+from building_blocks.application.notification_event import NotificationEvent
+from building_blocks.domain.event import DomainEvent, DomainEventType
 
 
 class Subscriptions(dict[type[EventType], list[EventHandlerType]]):
@@ -43,6 +44,14 @@ class EventBus:
     ) -> None:
         ...
 
+    @overload
+    def subscribe(
+        self,
+        event_cls: type[IntegrationEvent],
+        handler: IntegrationEventHandler[IntegrationEvent],
+    ) -> None:
+        ...
+
     def subscribe(self, event_cls, handler):  # type: ignore[no-untyped-def]
         self._subscriptions[event_cls].append(handler)
 
@@ -54,6 +63,10 @@ class EventBus:
     async def publish(self, event: NotificationEvent[DomainEvent]) -> None:
         ...
 
+    @overload
+    async def publish(self, event: IntegrationEvent) -> None:
+        ...
+
     async def publish(self, event):  # type: ignore[no-untyped-def]
         handlers = self._subscriptions.get(type(event))
         if handlers:
@@ -63,9 +76,5 @@ class EventBus:
 
 class EventsSubscriptionsConfiguratorBase(ABC):
     @abstractmethod
-    def configure_subscriptions(
-        self,
-        event_bus: EventBus,
-        public_domain_events_cls_list: PublicDomainEventsClsList,
-    ) -> None:
+    def configure_subscriptions(self) -> None:
         ...

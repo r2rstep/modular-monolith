@@ -1,7 +1,7 @@
 import pytest
 
-from building_blocks.within_bounded_context.application.event_handlers import DomainEventHandler
-from building_blocks.within_bounded_context.domain.events import DomainEvent
+from building_blocks.application.event_handlers import DomainEventHandler
+from building_blocks.domain.event import DomainEvent
 from commons.event_bus.application.event_bus import EventBus
 
 

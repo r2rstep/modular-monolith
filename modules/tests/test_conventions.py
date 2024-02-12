@@ -1,14 +1,12 @@
+import typing
+
 import injector
 
-from building_blocks.within_bounded_context.application.event_handlers import DomainEventHandler
-from building_blocks.within_bounded_context.domain.events import DomainEvent, is_public_event
-from commons.event_bus.application.event_bus import (
-    EventBus,
-    EventsSubscriptionsConfiguratorBase,
-)
+from building_blocks.application.event_handlers import DomainEventHandler
+from building_blocks.domain.event import DomainEvent, is_public_event
+from commons.event_bus.application.event_bus import EventBus, EventsSubscriptionsConfiguratorBase
 from commons.event_bus.event import Event
 from commons.messagebox.infrastructure.messagebox import Inbox, Outbox
-from commons.messagebox.types import PublicDomainEventsClsList
 from commons.utils import get_all_subclasses
 
 non_public_events = set()
@@ -18,6 +16,7 @@ class RestrictiveEventBus(EventBus):
     def subscribe(self, event_cls: type[Event], handler_cls: DomainEventHandler) -> None:
         if (
             event_cls.__module__ != handler_cls.__module__
+            and not isinstance(event_cls, typing._GenericAlias)  # noqa: SLF001
             and issubclass(event_cls, DomainEvent)
             and not is_public_event(event_cls)
         ):
@@ -27,7 +26,6 @@ class RestrictiveEventBus(EventBus):
 class Container(injector.Module):
     def configure(self, binder: injector.Binder) -> None:
         binder.bind(EventBus, to=RestrictiveEventBus, scope=injector.singleton)
-        binder.multibind(PublicDomainEventsClsList, to=[], scope=injector.singleton)
 
     @injector.singleton
     @injector.provider

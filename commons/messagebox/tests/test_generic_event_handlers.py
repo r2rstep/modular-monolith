@@ -1,12 +1,12 @@
 import pytest
 
-from building_blocks.within_bounded_context.application.command import Command
-from building_blocks.within_bounded_context.application.notification_event import NotificationEvent
-from building_blocks.within_bounded_context.domain.events import DomainEvent
+from building_blocks.application.command import Command
+from building_blocks.application.notification_event import NotificationEvent
+from building_blocks.domain.event import DomainEvent
 from commons.messagebox.application.generic_event_handlers import (
     build_store_command_in_inbox_handler,
 )
-from commons.messagebox.infrastructure.messagebox import Inbox, MessageDTO, MessageName
+from commons.messagebox.infrastructure.messagebox import Inbox, MessageDTO, MessageTopic
 
 
 class SomeEvent(DomainEvent):
@@ -39,7 +39,7 @@ class TestGenericStoreCommandBasedOnEventInInbox:
         await handler.handle(NotificationEvent(domain_event=SomeEvent(a=1, b="test")))
 
         # then command is stored in inbox
-        assert await inbox.get_next() == MessageDTO(MessageName("Command"), {})
+        assert await inbox.get_next() == MessageDTO(MessageTopic("Command"), {})
 
     async def test_command_has_subset_of_events_attributes(self):
         # given inbox and command
@@ -51,7 +51,7 @@ class TestGenericStoreCommandBasedOnEventInInbox:
         await handler.handle(NotificationEvent(domain_event=SomeEvent(a=1, b="test")))
 
         # then command is stored in inbox
-        assert await inbox.get_next() == MessageDTO(MessageName("CompatibleCommand"), {"a": 1})
+        assert await inbox.get_next() == MessageDTO(MessageTopic("CompatibleCommand"), {"a": 1})
 
     async def test_command_has_different_annotations_than_event(self):
         # given inbox and command

@@ -5,7 +5,7 @@ import injector
 from modules.rich_domain.module_1.core.application.bases import Command
 from modules.rich_domain.module_1.core.domain.events import RichDomainModelCreated
 
-from building_blocks.within_bounded_context.application.command import CommandHandler
+from building_blocks.application.command import CommandHandler
 from commons.event_bus.application.event_bus import EventBus
 from commons.types import PK
 from modules.rich_domain.language import RichDomainModelName

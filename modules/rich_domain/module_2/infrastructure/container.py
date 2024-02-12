@@ -13,7 +13,6 @@ from commons.messagebox.application.process_messagebox_commands import (
     ProcessOutbox as ProcessOutboxBase,
 )
 from commons.messagebox.infrastructure.messagebox import Inbox, Outbox
-from commons.messagebox.types import CommandsList, PublicDomainEventsClsList
 from modules.rich_domain.module_2.infrastructure.configuration.inbox import init_inbox
 from modules.rich_domain.module_2.infrastructure.configuration.outbox import init_outbox
 from modules.rich_domain.ports.adapters.api_clients import MessageBusCrudApiClient
@@ -23,8 +22,6 @@ from modules.rich_domain.ports.api_clients import CrudApiClient
 class Container(injector.Module):
     def configure(self, binder: injector.Binder) -> None:
         binder.bind(MessageBus, to=MessageBus, scope=injector.singleton)
-        binder.multibind(PublicDomainEventsClsList, to=[], scope=injector.singleton)
-        binder.multibind(CommandsList, to=[], scope=injector.singleton)
         binder.bind(CrudApiClient, to=MessageBusCrudApiClient)  # type: ignore[type-abstract]
 
     @injector.singleton
