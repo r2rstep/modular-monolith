@@ -6,4 +6,3 @@ from modules.rich_domain.language import RichDomainModelName
 class RichDomainModelCreated(DomainEvent):
     pk: PK
     name: RichDomainModelName
-    is_public: bool = True

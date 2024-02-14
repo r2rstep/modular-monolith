@@ -12,7 +12,7 @@ from building_blocks.application.event_handlers import (
     NotificationEventHandler,
 )
 from building_blocks.application.integration_event import IntegrationEvent
-from building_blocks.application.notification_event import NotificationEvent
+from building_blocks.application.notification_event import NotificationEvent, NotificationEventType
 from building_blocks.domain.event import DomainEvent, DomainEventType
 
 
@@ -25,7 +25,7 @@ class EventBus:
     def __init__(self) -> None:
         self._subscriptions: Union[
             Subscriptions[DomainEvent, DomainEventHandler[DomainEvent]],
-            Subscriptions[NotificationEvent[DomainEvent], NotificationEventHandler[DomainEvent]],
+            Subscriptions[NotificationEvent, NotificationEventHandler[NotificationEvent]],
         ] = defaultdict(list)  # type: ignore[assignment]
 
     @overload
@@ -39,8 +39,8 @@ class EventBus:
     @overload
     def subscribe(
         self,
-        event_cls: type[NotificationEvent[DomainEventType]],
-        handler: NotificationEventHandler[DomainEventType],
+        event_cls: type[NotificationEventType],
+        handler: NotificationEventHandler[NotificationEventType],
     ) -> None:
         ...
 
@@ -60,7 +60,7 @@ class EventBus:
         ...
 
     @overload
-    async def publish(self, event: NotificationEvent[DomainEvent]) -> None:
+    async def publish(self, event: NotificationEvent) -> None:
         ...
 
     @overload

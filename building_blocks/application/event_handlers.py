@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Generic, TypeVar
 
 from building_blocks.application.integration_event import IntegrationEvent, IntegrationEventType
-from building_blocks.application.notification_event import NotificationEvent
+from building_blocks.application.notification_event import NotificationEvent, NotificationEventType
 from building_blocks.domain.event import DomainEvent, DomainEventType
 
 
@@ -12,9 +12,9 @@ class DomainEventHandler(ABC, Generic[DomainEventType]):
         ...
 
 
-class NotificationEventHandler(ABC, Generic[DomainEventType]):
+class NotificationEventHandler(ABC, Generic[NotificationEventType]):
     @abstractmethod
-    async def handle(self, event: NotificationEvent[DomainEventType]) -> None:
+    async def handle(self, event: NotificationEventType) -> None:
         ...
 
 
@@ -24,10 +24,10 @@ class IntegrationEventHandler(ABC, Generic[IntegrationEventType]):
         ...
 
 
-EventType = TypeVar("EventType", DomainEvent, NotificationEvent[DomainEvent], IntegrationEvent)
+EventType = TypeVar("EventType", DomainEvent, NotificationEvent, IntegrationEvent)
 EventHandlerType = TypeVar(
     "EventHandlerType",
     DomainEventHandler[DomainEvent],
-    NotificationEventHandler[DomainEvent],
+    NotificationEventHandler[NotificationEvent],
     IntegrationEventHandler[IntegrationEvent],
 )

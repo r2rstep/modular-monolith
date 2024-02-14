@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 from building_blocks.application.bounded_context_translator import BoundedContextTranslator
 from building_blocks.application.command import Command
 from building_blocks.application.notification_event import NotificationEvent
-from building_blocks.domain.event import DomainEvent
 from commons.event_bus.application.event_bus import EventBus
 from commons.message_bus.message_bus import MessageBus
 from commons.messagebox.infrastructure.messagebox import MessagePayload
@@ -26,16 +25,13 @@ class CommandMessageHandler(MessageHandler):
 
 
 class NotificationEventMessageHandler(MessageHandler):
-    def __init__(self, domain_event_cls: type[DomainEvent], event_bus: EventBus) -> None:
+    def __init__(self, notification_event_cls: type[NotificationEvent], event_bus: EventBus) -> None:
         self._event_bus = event_bus
-        self._event_cls = domain_event_cls
+        self._event_cls = notification_event_cls
 
     async def handle(self, message_payload: MessagePayload) -> None:
         notification_serialized = message_payload
-        notification: NotificationEvent[DomainEvent] = NotificationEvent(
-            domain_event=self._event_cls(**notification_serialized["domain_event"]),
-            idempotency_id=notification_serialized["idempotency_id"],
-        )
+        notification = self._event_cls(**notification_serialized)
         await self._event_bus.publish(notification)
 
 
