@@ -4,16 +4,14 @@ from modules.rich_domain.module_1.core.application.event_handlers.rich_domain_mo
     PublishRichDomainModelCreatedIntegrationEvent,
     RichDomainModelCreatedHandler,
 )
+from modules.rich_domain.module_1.core.application.events import RichDomainModelCreatedNotification
 from modules.rich_domain.module_1.core.domain.events import RichDomainModelCreated
 
-from building_blocks.application.notification_event import NotificationEvent
-from building_blocks.domain.event import event_originates_from_module, is_public_event
 from commons.event_bus.application.event_bus import EventBus, EventsSubscriptionsConfiguratorBase
-from commons.messagebox.application.generic_event_handlers import GenericStoreNotificationEventInOutbox
+from commons.messagebox.application.generic_event_handlers import build_store_notification_in_outbox_handler
 from commons.messagebox.application.message_handlers import NotificationEventMessageHandler
 from commons.messagebox.application.process_messagebox_handlers import ProcessOutboxHandler
 from commons.messagebox.infrastructure.messagebox import MessageTopic
-from modules.rich_domain.module_1.infrastructure import settings
 
 
 class EventsSubscriptionsConfigurator(EventsSubscriptionsConfiguratorBase):
@@ -30,19 +28,25 @@ class EventsSubscriptionsConfigurator(EventsSubscriptionsConfiguratorBase):
         self._subscribe_notification_events()
 
     def _subscribe_domain_events(self) -> None:
-        for event_cls, handler_cls in [
-            (RichDomainModelCreated, RichDomainModelCreatedHandler),
+        for domain_event_cls, handler_cls, notification_event_cls in [
+            (RichDomainModelCreated, RichDomainModelCreatedHandler, RichDomainModelCreatedNotification),
         ]:
-            self._event_bus.subscribe(event_cls, self._container.get(handler_cls))
+            self._event_bus.subscribe(domain_event_cls, self._container.get(handler_cls))
 
-            if is_public_event(event_cls) and event_originates_from_module(event_cls, settings.MODULE):
-                self._event_bus.subscribe(event_cls, self._container.get(GenericStoreNotificationEventInOutbox))
+            if notification_event_cls:  # type: ignore[truthy-function]
+                self._event_bus.subscribe(
+                    domain_event_cls,
+                    self._container.get(
+                        build_store_notification_in_outbox_handler(notification_event_cls, domain_event_cls)
+                    ),
+                )
                 self._process_outbox_handler.add_handler(
-                    MessageTopic(event_cls.event_name()), NotificationEventMessageHandler(event_cls, self._event_bus)
+                    MessageTopic(notification_event_cls.event_name()),
+                    NotificationEventMessageHandler(notification_event_cls, self._event_bus),
                 )
 
     def _subscribe_notification_events(self) -> None:
         self._event_bus.subscribe(
-            NotificationEvent[RichDomainModelCreated],
+            RichDomainModelCreatedNotification,
             self._container.get(PublishRichDomainModelCreatedIntegrationEvent),
         )

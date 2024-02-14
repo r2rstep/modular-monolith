@@ -2,17 +2,15 @@ import pytest
 
 from building_blocks.application.command import Command
 from building_blocks.application.notification_event import NotificationEvent
-from building_blocks.domain.event import DomainEvent
 from commons.messagebox.application.generic_event_handlers import (
     build_store_command_in_inbox_handler,
 )
 from commons.messagebox.infrastructure.messagebox import Inbox, MessageDTO, MessageTopic
 
 
-class SomeEvent(DomainEvent):
+class SomeEvent(NotificationEvent):
     a: int
     b: str
-    is_public: bool = True
 
 
 class CompatibleCommand(Command):
@@ -36,7 +34,7 @@ class TestGenericStoreCommandBasedOnEventInInbox:
         # when handling an event
         handler_cls = build_store_command_in_inbox_handler(Command, SomeEvent)
         handler = handler_cls(inbox)
-        await handler.handle(NotificationEvent(domain_event=SomeEvent(a=1, b="test")))
+        await handler.handle(SomeEvent(a=1, b="test"))
 
         # then command is stored in inbox
         assert await inbox.get_next() == MessageDTO(MessageTopic("Command"), {})
@@ -48,7 +46,7 @@ class TestGenericStoreCommandBasedOnEventInInbox:
         # when handling an event
         handler_cls = build_store_command_in_inbox_handler(CompatibleCommand, SomeEvent)
         handler = handler_cls(inbox)
-        await handler.handle(NotificationEvent(domain_event=SomeEvent(a=1, b="test")))
+        await handler.handle(SomeEvent(a=1, b="test"))
 
         # then command is stored in inbox
         assert await inbox.get_next() == MessageDTO(MessageTopic("CompatibleCommand"), {"a": 1})
@@ -67,7 +65,7 @@ class TestGenericStoreCommandBasedOnEventInInbox:
                 f" Command: {CommandWithDifferentAnnotations}, event: {SomeEvent}"
             ),
         ):
-            await handler.handle(NotificationEvent(domain_event=SomeEvent(a=1, b="test")))
+            await handler.handle(SomeEvent(a=1, b="test"))
 
     async def test_command_has_different_attributes_than_event(self):
         # given inbox and command
@@ -83,4 +81,4 @@ class TestGenericStoreCommandBasedOnEventInInbox:
                 f" Command: {CommandWithDifferentAttributes}, event: {SomeEvent}"
             ),
         ):
-            await handler.handle(NotificationEvent(domain_event=SomeEvent(a=1, b="test")))
+            await handler.handle(SomeEvent(a=1, b="test"))

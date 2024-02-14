@@ -1,4 +1,7 @@
-from modules.rich_domain.module_1.core.application.integration_events import RichDomainModelCreatedIntegrationEvent
+from modules.rich_domain.module_1.core.application.events import (
+    RichDomainModelCreatedIntegrationEvent,
+    RichDomainModelCreatedNotification,
+)
 from modules.rich_domain.module_1.core.domain.events import RichDomainModelCreated
 
 from building_blocks.application.event_handlers import DomainEventHandler
@@ -11,5 +14,5 @@ class RichDomainModelCreatedHandler(DomainEventHandler[RichDomainModelCreated]):
 
 
 PublishRichDomainModelCreatedIntegrationEvent = build_generic_publish_integration_event_handler(
-    RichDomainModelCreatedIntegrationEvent, RichDomainModelCreated
+    RichDomainModelCreatedIntegrationEvent, RichDomainModelCreatedNotification
 )

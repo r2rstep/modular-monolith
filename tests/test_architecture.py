@@ -7,8 +7,8 @@ import pytest
 
 from building_blocks.application.command import Command
 from building_blocks.application.integration_event import IntegrationEvent
+from building_blocks.application.notification_event import NotificationEvent
 from building_blocks.application.query import Query
-from building_blocks.domain.event import DomainEvent, is_public_event
 from commons.message_bus.message_bus import MessageBus
 
 
@@ -25,7 +25,7 @@ def test_modules_can_expose_only_commands_and_queries_and_public_events_and_mess
         "is_command": lambda attr_type: issubclass(attr_type, Command),
         "is_query": lambda attr_type: issubclass(attr_type, Query),
         "is_message_bus": lambda attr_type: issubclass(attr_type, MessageBus),
-        "is_public_event": lambda attr_type: issubclass(attr_type, DomainEvent) and is_public_event(attr_type),
+        "is_notification_event": lambda attr_type: issubclass(attr_type, NotificationEvent),
         "is_integration_event": lambda attr_type: issubclass(attr_type, IntegrationEvent),
     }
 

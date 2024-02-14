@@ -19,10 +19,9 @@ from commons.messagebox.infrastructure.messagebox import (
 )
 
 
-class DummyEvent(DomainEvent, Command):
+class DummyEvent(NotificationEvent, Command):
     param: int = 0
     should_fail: bool = False
-    is_public: bool = True
 
 
 class FakeBus(EventBus, MessageBus):
@@ -31,7 +30,7 @@ class FakeBus(EventBus, MessageBus):
         super().__init__()
 
     async def publish(self, event: NotificationEvent) -> None:
-        if getattr(event.domain_event, "should_fail", False):
+        if getattr(event, "should_fail", False):
             raise RuntimeError
 
         self.processed.append(event)
@@ -67,8 +66,8 @@ class TestProcessOutboxHandler:
         )
         return message_box_handler
 
-    def build_message(self, event: DomainEvent) -> tuple[MessageTopic, BaseModel]:
-        return MessageTopic(event.event_name()), NotificationEvent(domain_event=event)
+    def build_message(self, event: NotificationEvent) -> tuple[MessageTopic, BaseModel]:
+        return MessageTopic(event.event_name()), event
 
     async def test_messagebox_empty(
         self,

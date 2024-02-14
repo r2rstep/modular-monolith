@@ -7,5 +7,5 @@ from building_blocks.domain.event import DomainEvent
 
 class BoundedContextTranslator(ABC):
     @abstractmethod
-    def translate(self, input_: dict[str, Any]) -> Union[DomainEvent, NotificationEvent[DomainEvent]]:
+    def translate(self, input_: dict[str, Any]) -> Union[DomainEvent, NotificationEvent]:
         ...
