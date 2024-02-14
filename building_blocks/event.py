@@ -1,7 +1,11 @@
-from abc import abstractmethod
 from datetime import datetime
+from typing import TypedDict
 
 from pydantic import BaseModel, ConfigDict, Field
+
+
+class EventDict(TypedDict):
+    occurred_at: datetime
 
 
 class Event(BaseModel):
@@ -10,6 +14,5 @@ class Event(BaseModel):
     model_config = ConfigDict(frozen=True)
 
     @classmethod
-    @abstractmethod
     def event_name(cls) -> str:
-        pass
+        return f"{cls.__bases__[0].__name__}__{cls.__name__}"

@@ -2,10 +2,12 @@ import pytest
 
 from building_blocks.application.command import Command
 from building_blocks.application.notification_event import NotificationEvent
+from building_blocks.domain.event import DomainEvent
 from commons.messagebox.application.generic_event_handlers import (
     build_store_command_in_inbox_handler,
+    build_store_notification_in_outbox_handler,
 )
-from commons.messagebox.infrastructure.messagebox import Inbox, MessageDTO, MessageTopic
+from commons.messagebox.infrastructure.messagebox import Inbox, MessageDTO, MessageTopic, Outbox
 
 
 class SomeEvent(NotificationEvent):
@@ -37,7 +39,7 @@ class TestGenericStoreCommandBasedOnEventInInbox:
         await handler.handle(SomeEvent(a=1, b="test"))
 
         # then command is stored in inbox
-        assert await inbox.get_next() == MessageDTO(MessageTopic("Command"), {})
+        assert await inbox.get_next() == MessageDTO(MessageTopic("Command__Command"), {})
 
     async def test_command_has_subset_of_events_attributes(self):
         # given inbox and command
@@ -49,7 +51,7 @@ class TestGenericStoreCommandBasedOnEventInInbox:
         await handler.handle(SomeEvent(a=1, b="test"))
 
         # then command is stored in inbox
-        assert await inbox.get_next() == MessageDTO(MessageTopic("CompatibleCommand"), {"a": 1})
+        assert await inbox.get_next() == MessageDTO(MessageTopic("Command__CompatibleCommand"), {"a": 1})
 
     async def test_command_has_different_annotations_than_event(self):
         # given inbox and command
@@ -82,3 +84,29 @@ class TestGenericStoreCommandBasedOnEventInInbox:
             ),
         ):
             await handler.handle(SomeEvent(a=1, b="test"))
+
+
+class DummyEvent(DomainEvent):
+    a: int
+    b: str
+
+
+@pytest.mark.asyncio()
+async def test_generic_store_integration_event_in_inbox():
+    # given inbox and event
+    outbox = Outbox("test")
+
+    # when handling an event
+    domain_event = DummyEvent(a=1, b="test")
+    handler = build_store_notification_in_outbox_handler(SomeEvent, DummyEvent)
+    await handler(outbox).handle(domain_event)
+
+    # then command is stored in inbox
+    result = await outbox.get_next()
+    result_payload_without_randoms = {
+        k: v for k, v in result.payload.items() if k not in ["idempotency_id", "occurred_at"]
+    }
+    assert (result.topic, result_payload_without_randoms) == (
+        MessageTopic("NotificationEvent__SomeEvent"),
+        {"a": 1, "b": "test"},
+    )

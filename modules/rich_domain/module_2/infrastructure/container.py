@@ -12,6 +12,7 @@ from commons.messagebox.application.process_messagebox_commands import (
     ProcessInbox as ProcessInboxBase,
     ProcessOutbox as ProcessOutboxBase,
 )
+from commons.messagebox.application.process_messagebox_handlers import MessageHandlers
 from commons.messagebox.infrastructure.messagebox import Inbox, Outbox
 from modules.rich_domain.module_2.infrastructure.configuration.inbox import init_inbox
 from modules.rich_domain.module_2.infrastructure.configuration.outbox import init_outbox
@@ -23,6 +24,7 @@ class Container(injector.Module):
     def configure(self, binder: injector.Binder) -> None:
         binder.bind(MessageBus, to=MessageBus, scope=injector.singleton)
         binder.bind(CrudApiClient, to=MessageBusCrudApiClient)  # type: ignore[type-abstract]
+        binder.multibind(MessageHandlers, to={}, scope=injector.singleton)
 
     @injector.singleton
     @injector.provider

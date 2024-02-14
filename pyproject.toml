@@ -102,6 +102,7 @@ layers = [
 ignore_imports = [
     "commons.container.infrastructure.global_container -> commons.**",
     "modules.**.tests.** -> app.**",
+    "modules.tests.** -> app.**",
 ]
 
 [[tool.importlinter.contracts]]

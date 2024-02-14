@@ -9,9 +9,9 @@ from commons.types import PK, NoneOr
 class Command(ABC, BaseModel):
     model_config = ConfigDict(frozen=True)
 
-    @property
-    def command_name(self) -> str:
-        return self.__class__.__name__
+    @classmethod
+    def command_name(cls) -> str:
+        return f"Command__{cls.__name__}"
 
 
 CommandType = TypeVar("CommandType", bound=Command)

@@ -16,7 +16,7 @@ class GenericIntegrationEventPublisher(NotificationEventHandler[NotificationEven
         self._event_bus = event_bus
 
     async def handle(self, event: NotificationEvent) -> None:
-        await self._event_bus.publish(IntegrationEvent.from_notification_event(notification_event=event))
+        await self._event_bus.publish(self._integration_event_cls.from_notification_event(notification_event=event))
 
 
 def build_generic_publish_integration_event_handler(

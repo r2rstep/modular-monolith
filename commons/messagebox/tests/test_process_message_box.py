@@ -60,7 +60,7 @@ class TestProcessOutboxHandler:
 
     @pytest.fixture()
     def messagebox_handler(self, messagebox, fake_bus) -> ProcessMessageboxHandler:
-        message_box_handler = ProcessMessageboxHandler(messagebox)
+        message_box_handler = ProcessMessageboxHandler(messagebox, {})
         message_box_handler.add_handler(
             MessageTopic(DummyEvent.event_name()), NotificationEventMessageHandler(DummyEvent, fake_bus)
         )
