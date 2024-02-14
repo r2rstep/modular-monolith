@@ -78,7 +78,7 @@ class GenericStoreCommandBasedOnNotificationEventInInbox(NotificationEventHandle
 
         command_payload = {key: getattr(notification, key) for key in command_annotations}
         await self._inbox.add_idempotent(
-            MessageTopic(self._command_cls.__name__), command_payload, notification.idempotency_id
+            MessageTopic(self._command_cls.command_name()), command_payload, notification.idempotency_id
         )
 
 

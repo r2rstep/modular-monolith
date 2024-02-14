@@ -3,6 +3,7 @@ import functools
 import injector
 
 from commons.container.infrastructure import scopes
+from commons.database.db import InMemoryDb
 from commons.event_bus.application.event_bus import EventBus
 from commons.message_bus.message_bus import (
     CommandToHandlerMapping,
@@ -13,6 +14,7 @@ from commons.message_bus.message_bus import (
 class GlobalContainer(injector.Module):
     def configure(self, binder: injector.Binder) -> None:
         binder.bind(EventBus, to=EventBus, scope=scopes.context_scope)
+        binder.bind(InMemoryDb, to=InMemoryDb, scope=injector.singleton)
 
     @injector.singleton
     @injector.provider

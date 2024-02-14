@@ -9,8 +9,6 @@ import toml
 def test_ruff():
     ruff = Path(sysconfig.get_path("scripts")) / "ruff"
 
-    # below print ensures PyCharm is able to link to the failing files
-    print("\n")  # noqa: T201
     stdout, stderr, exit_code = _run([ruff, "check", "."])
     assert exit_code == 0, f"ruff check failed:\n{stdout}"
     stdout, stderr, exit_code = _run([ruff, "format", "--check", "."])

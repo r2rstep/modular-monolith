@@ -27,9 +27,5 @@ class NotificationEvent(Event):
         notification_event_dict = {k: v for k, v in dict(domain_event).items() if k in cls.model_fields}
         return cls(**notification_event_dict)
 
-    @classmethod
-    def event_name(cls) -> str:
-        return f"{NotificationEvent.__name__}__{cls.__name__}"
-
 
 NotificationEventType = typing.TypeVar("NotificationEventType", bound=NotificationEvent)

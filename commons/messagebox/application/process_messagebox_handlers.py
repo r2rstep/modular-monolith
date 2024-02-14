@@ -9,12 +9,14 @@ from commons.messagebox.infrastructure.messagebox import (
     Outbox,
 )
 
+MessageHandlers = dict[MessageTopic, MessageHandler]
+
 
 class ProcessMessageboxHandler(CommandHandler[Command]):
     @injector.inject
-    def __init__(self, messagebox: Messagebox) -> None:
+    def __init__(self, messagebox: Messagebox, handlers: MessageHandlers) -> None:
         self._messagebox = messagebox
-        self._handlers: dict[MessageTopic, MessageHandler] = {}
+        self._handlers = handlers
 
     def add_handler(self, topic: MessageTopic, handler: MessageHandler) -> None:
         self._handlers.update({topic: handler})
@@ -37,11 +39,11 @@ class ProcessMessageboxHandler(CommandHandler[Command]):
 
 class ProcessOutboxHandler(ProcessMessageboxHandler):
     @injector.inject
-    def __init__(self, outbox: Outbox) -> None:
-        super().__init__(outbox)
+    def __init__(self, outbox: Outbox, handlers: MessageHandlers) -> None:
+        super().__init__(outbox, handlers)
 
 
 class ProcessInboxHandler(ProcessMessageboxHandler):
     @injector.inject
-    def __init__(self, inbox: Inbox) -> None:
-        super().__init__(inbox)
+    def __init__(self, inbox: Inbox, handlers: MessageHandlers) -> None:
+        super().__init__(inbox, handlers)

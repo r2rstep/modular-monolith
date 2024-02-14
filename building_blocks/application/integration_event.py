@@ -1,13 +1,13 @@
 from abc import ABC
-from typing import TypedDict, TypeVar
+from typing import TypeVar
 
 from pydantic import ConfigDict, model_validator
 
 from building_blocks.application.notification_event import NotificationEvent
-from building_blocks.event import Event
+from building_blocks.event import Event, EventDict
 
 
-class IntegrationEventDict(TypedDict):
+class IntegrationEventDict(EventDict, total=False):
     idempotency_id: str
 
 
@@ -39,10 +39,6 @@ class IntegrationEvent(ABC, Event):
         integration_event_dict["_from_notification_event"] = True
         integration_event_dict["idempotency_id"] = notification_event.idempotency_id
         return cls(**integration_event_dict)
-
-    @classmethod
-    def event_name(cls) -> str:
-        return f"{IntegrationEvent.__name__}__{cls.__name__}"
 
 
 IntegrationEventType = TypeVar("IntegrationEventType", bound=IntegrationEvent)

@@ -2,7 +2,7 @@ import functools
 
 import injector
 
-from modules.another_rich_domain.core.application.messagebox import ProcessInbox, ProcessOutbox
+from modules.another_rich_domain.core.application.messagebox import ProcessInbox
 
 from commons.container.infrastructure.global_container import get_global_container
 from commons.message_bus.message_bus import (
@@ -12,6 +12,7 @@ from commons.messagebox.application.process_messagebox_commands import (
     ProcessInbox as ProcessInboxBase,
     ProcessOutbox as ProcessOutboxBase,
 )
+from commons.messagebox.application.process_messagebox_handlers import MessageHandlers
 from commons.messagebox.infrastructure.messagebox import Inbox
 from modules.another_rich_domain.infrastructure.configuration.inbox import init_inbox
 
@@ -19,6 +20,7 @@ from modules.another_rich_domain.infrastructure.configuration.inbox import init_
 class Container(injector.Module):
     def configure(self, binder: injector.Binder) -> None:
         binder.bind(MessageBus, to=MessageBus, scope=injector.singleton)
+        binder.multibind(MessageHandlers, to={}, scope=injector.singleton)
 
     @injector.provider
     @injector.singleton
@@ -34,7 +36,7 @@ class Container(injector.Module):
     @injector.singleton
     @injector.provider
     def process_outbox_command_provider(self) -> type[ProcessOutboxBase]:
-        return ProcessOutbox
+        return None  # type: ignore[return-value]
 
 
 @functools.lru_cache
