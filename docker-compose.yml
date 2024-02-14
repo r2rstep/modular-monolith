@@ -1,0 +1,12 @@
+version: '3'
+services:
+  mod_mon:
+    build:
+      context: .
+      dockerfile: deployment/Dockerfile
+    ports:
+      - "8100:8100"
+    expose:
+      - "8100"
+    volumes:
+      - .:/app

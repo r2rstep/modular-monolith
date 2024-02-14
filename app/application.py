@@ -25,5 +25,7 @@ async def process_inboxes() -> None:
 
 app = FastAPI(title="mod_mon API", version="0.1.0", lifespan=app_lifespan, dependencies=[Depends(process_inboxes)])
 
+app.get("/health")(lambda: {"status": "ok"})
+
 for router in module_1.startup.get_routers() + module_2.startup.get_routers() + crud.startup.get_routers():
     app.include_router(router)
