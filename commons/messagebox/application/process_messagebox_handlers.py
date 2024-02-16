@@ -22,19 +22,14 @@ class ProcessMessageboxHandler(CommandHandler[Command]):
         self._handlers.update({topic: handler})
 
     async def handle(self, _: Command) -> None:
-        failed_messages = []
-        while (message := await self._messagebox.get_next()) is not None:
-            try:
-                await self._handlers[message.topic].handle(message.payload)
-            except KeyError:  # noqa: PERF203
-                # TODO @R2RStep: add logging
-                # https://github.com/r2rstep/modular-monolith/issues/18
-                continue
-            except Exception:  # noqa: BLE001
-                failed_messages.append(message)
-
-        for message in failed_messages:
-            await self._messagebox.add(message.topic, message.payload)
+        with self._messagebox.open():
+            while message := await self._messagebox.get_next_pending():
+                try:
+                    await self._handlers[message["topic"]].handle(message["payload"])
+                except KeyError:  # noqa: PERF203
+                    # TODO @R2RStep: add logging
+                    # https://github.com/r2rstep/modular-monolith/issues/18
+                    continue
 
 
 class ProcessOutboxHandler(ProcessMessageboxHandler):
