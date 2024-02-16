@@ -7,7 +7,7 @@ from commons.messagebox.application.generic_event_handlers import (
     build_store_command_in_inbox_handler,
     build_store_notification_in_outbox_handler,
 )
-from commons.messagebox.infrastructure.messagebox import Inbox, MessageDTO, MessageTopic, Outbox
+from commons.messagebox.infrastructure.messagebox import Inbox, MessageTopic, Outbox
 
 
 class SomeEvent(NotificationEvent):
@@ -27,6 +27,10 @@ class CommandWithDifferentAttributes(Command):
     c: int
 
 
+def _excluding_created_at(message):
+    return {k: v for k, v in message.items() if k != "created_at"}
+
+
 @pytest.mark.asyncio()
 class TestGenericStoreCommandBasedOnEventInInbox:
     async def test_command_with_no_attributes(self):
@@ -39,7 +43,12 @@ class TestGenericStoreCommandBasedOnEventInInbox:
         await handler.handle(SomeEvent(a=1, b="test"))
 
         # then command is stored in inbox
-        assert await inbox.get_next() == MessageDTO(MessageTopic("Command__Command"), {})
+        with inbox.open():
+            assert _excluding_created_at(await inbox.get_next_pending()) == {
+                "topic": MessageTopic("Command__Command"),
+                "payload": {},
+                "status": "pending",
+            }
 
     async def test_command_has_subset_of_events_attributes(self):
         # given inbox and command
@@ -51,7 +60,12 @@ class TestGenericStoreCommandBasedOnEventInInbox:
         await handler.handle(SomeEvent(a=1, b="test"))
 
         # then command is stored in inbox
-        assert await inbox.get_next() == MessageDTO(MessageTopic("Command__CompatibleCommand"), {"a": 1})
+        with inbox.open():
+            assert _excluding_created_at(await inbox.get_next_pending()) == {
+                "topic": MessageTopic("Command__CompatibleCommand"),
+                "payload": {"a": 1},
+                "status": "pending",
+            }
 
     async def test_command_has_different_annotations_than_event(self):
         # given inbox and command
@@ -102,11 +116,12 @@ async def test_generic_store_integration_event_in_inbox():
     await handler(outbox).handle(domain_event)
 
     # then command is stored in inbox
-    result = await outbox.get_next()
+    with outbox.open():
+        result = await outbox.get_next_pending()
     result_payload_without_randoms = {
-        k: v for k, v in result.payload.items() if k not in ["idempotency_id", "occurred_at"]
+        k: v for k, v in result["payload"].items() if k not in ["idempotency_id", "occurred_at"]
     }
-    assert (result.topic, result_payload_without_randoms) == (
+    assert (result["topic"], result_payload_without_randoms) == (
         MessageTopic("NotificationEvent__SomeEvent"),
         {"a": 1, "b": "test"},
     )

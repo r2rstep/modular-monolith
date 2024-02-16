@@ -24,7 +24,8 @@ class GenericStoreNotificationEventInOutbox(DomainEventHandler[DomainEventType])
 
     async def handle(self, domain_event: DomainEventType) -> None:
         notification = self._notification_event_cls.from_domain_event(domain_event)
-        await self._outbox.add(MessageTopic(notification.event_name()), dict(notification))
+        with self._outbox.open():
+            await self._outbox.add(MessageTopic(notification.event_name()), dict(notification))
 
 
 def build_store_notification_in_outbox_handler(
@@ -46,7 +47,8 @@ class GenericStoreIntegrationEventInInbox(IntegrationEventHandler[IntegrationEve
         self._inbox = inbox
 
     async def handle(self, event: IntegrationEventType) -> None:
-        await self._inbox.add(MessageTopic(event.event_name()), dict(event))
+        with self._inbox.open():
+            await self._inbox.add(MessageTopic(event.event_name()), dict(event))
 
 
 class GenericStoreCommandBasedOnNotificationEventInInbox(NotificationEventHandler[NotificationEventType]):
@@ -77,9 +79,10 @@ class GenericStoreCommandBasedOnNotificationEventInInbox(NotificationEventHandle
             raise ValueError(exception_message)
 
         command_payload = {key: getattr(notification, key) for key in command_annotations}
-        await self._inbox.add_idempotent(
-            MessageTopic(self._command_cls.command_name()), command_payload, notification.idempotency_id
-        )
+        with self._inbox.open():
+            await self._inbox.add_idempotent(
+                MessageTopic(self._command_cls.command_name()), command_payload, notification.idempotency_id
+            )
 
 
 def build_store_command_in_inbox_handler(
